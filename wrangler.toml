@@ -1,0 +1,72 @@
+name = "congresswatch"
+main = "src/index.ts"
+compatibility_date = "2024-11-12"
+compatibility_flags = ["nodejs_compat"]
+
+# Cloudflare Assets (Hosting the React 19 Frontend)
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+
+# Cloudflare D1 Relational Database
+[[d1_databases]]
+binding = "DB"
+database_name = "congresswatch-db"
+database_id = "congresswatch-db-id"
+migrations_dir = "migrations"
+
+# Cloudflare R2 Object Storage (/watchers/congresswatch/...)
+[[r2_buckets]]
+binding = "WATCHERS_BUCKET"
+bucket_name = "watchers"
+
+# Cloudflare Vectorize (Semantic Search / RAG Embeddings)
+[[vectorize]]
+binding = "VECTORIZE_INDEX"
+index_name = "congresswatch-vectors"
+
+# Cloudflare Workers AI (Embeddings, Whisper Transcripts, Fallback LLM)
+[ai]
+binding = "AI"
+
+# Cloudflare Workflows (Resilient multi-step bill ingestion & processing)
+[[workflows]]
+name = "bill-ingestion-workflow"
+binding = "BILL_INGESTION_WORKFLOW"
+class_name = "BillIngestionWorkflow"
+
+[[workflows]]
+name = "social-sync-workflow"
+binding = "SOCIAL_SYNC_WORKFLOW"
+class_name = "SocialSyncWorkflow"
+
+# Cloudflare Queues (Asynchronous decoupled task distribution)
+[[queues.producers]]
+binding = "INGESTION_QUEUE"
+queue = "congresswatch-ingestion"
+
+[[queues.producers]]
+binding = "OCR_QUEUE"
+queue = "congresswatch-ocr"
+
+[[queues.consumers]]
+queue = "congresswatch-ingestion"
+max_batch_size = 10
+max_batch_timeout = 30
+
+[[queues.consumers]]
+queue = "congresswatch-ocr"
+max_batch_size = 5
+max_batch_timeout = 60
+
+# Cloudflare Triggers / Crons
+[triggers]
+crons = ["*/15 * * * *", "0 */6 * * *"]
+
+# Public Environment Variables
+[vars]
+ENVIRONMENT = "production"
+ENABLE_SPEED_OPTIMIZATIONS = "true"
+CACHE_TTL_DEFAULT = "3600"
+TOGETHER_MODEL = "meta-llama/Llama-3.3-70B-Instruct-Turbo"
+

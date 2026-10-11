@@ -1,0 +1,26 @@
+# CongressWatch Environment Variables (.dev.vars for local dev)
+
+# AI Providers
+TOGETHER_API_KEY=your_together_ai_api_key_here
+
+# Congress & Government APIs
+CONGRESS_API_KEY=your_congress_gov_api_key_here
+FMP_API_KEY=your_financial_modeling_prep_api_key_here
+LEGISCAN_API_KEY=your_legiscan_api_key_here
+
+# WorkOS AuthKit
+WORKOS_API_KEY=sk_live_...
+WORKOS_CLIENT_ID=client_...
+WORKOS_REDIRECT_URI=https://your-domain.com/auth/callback
+
+# Cloudflare Turnstile & Monetization
+TURNSTILE_SECRET_KEY=0x4AAAAAA...
+CLOUDFLARE_MONETIZATION_KEY=your_monetization_gateway_key
+
+# Email Sending (Custom SMTP & Cloudflare Email)
+SMTP_HOST=smtp.mailgun.org
+SMTP_PORT=587
+SMTP_USER=postmaster@your-domain.com
+SMTP_PASS=your_smtp_password
+CLOUDFLARE_EMAIL_SENDER=alerts@congresswatch.org
+
