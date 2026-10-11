@@ -29,6 +29,20 @@ index_name = "congresswatch-vectors"
 [ai]
 binding = "AI"
 
+# Cloudflare KV (API Key Cache, IP Whitelists, Fast Lookups)
+[[kv_namespaces]]
+binding = "API_CACHE_KV"
+id = "congresswatch-api-cache-id"
+
+# Cloudflare Durable Objects (Strict Distributed Rate Limiting & Company Quota Pools)
+[[durable_objects.bindings]]
+name = "RATE_LIMITER"
+class_name = "RateLimiterDO"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["RateLimiterDO"]
+
 # Cloudflare Workflows (Resilient multi-step bill ingestion & processing)
 [[workflows]]
 name = "bill-ingestion-workflow"
@@ -40,7 +54,7 @@ name = "social-sync-workflow"
 binding = "SOCIAL_SYNC_WORKFLOW"
 class_name = "SocialSyncWorkflow"
 
-# Cloudflare Queues (Asynchronous decoupled task distribution)
+# Cloudflare Queues
 [[queues.producers]]
 binding = "INGESTION_QUEUE"
 queue = "congresswatch-ingestion"
@@ -68,5 +82,7 @@ crons = ["*/15 * * * *", "0 */6 * * *"]
 ENVIRONMENT = "production"
 ENABLE_SPEED_OPTIMIZATIONS = "true"
 CACHE_TTL_DEFAULT = "3600"
+DEFAULT_DAILY_RATE_LIMIT = "100"
+DEFAULT_MONTHLY_RATE_LIMIT = "1500"
 TOGETHER_MODEL = "meta-llama/Llama-3.3-70B-Instruct-Turbo"
 
