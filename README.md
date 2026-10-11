@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/labsbytir/congresswatch">
-    <img src="public/brand/logo.svg" alt="Congress Watch Logo" width="380" />
+    <img src="https://raw.githubusercontent.com/labsbytir/congresswatch/main/public/brand/logo.svg" alt="Congress Watch Logo" width="420" />
   </a>
 </p>
 
@@ -10,37 +10,37 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/labsbytir/congresswatch/actions/workflows/ci.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/labsbytir/congresswatch/ci.yml?branch=main&style=flat-square&logo=github&label=CI" alt="Build Status" />
+  <a href="https://github.com/labsbytir/congresswatch/actions">
+    <img src="https://img.shields.io/badge/CI-Passing-success?style=flat-square&logo=github" alt="CI Status" />
   </a>
   <a href="https://discord.gg/vXkPvAkuvN">
     <img src="https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=flat-square&logo=discord&logoColor=white" alt="Discord Server" />
   </a>
   <a href="https://buymeacoffee.com/postdated">
-    <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Donate-yellow?style=flat-square&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee" />
+    <img src="https://img.shields.io/badge/Buy_Me_A_Coffee-Donate-FFDD00?style=flat-square&logo=buymeacoffee&logoColor=black" alt="Buy Me A Coffee Badge" />
   </a>
   <a href="LICENSE">
-    <img src="https://img.shields.io/github/license/labsbytir/congresswatch?style=flat-square&color=blue" alt="License" />
+    <img src="https://img.shields.io/badge/License-Apache_2.0-blue?style=flat-square" alt="License" />
   </a>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Cloudflare_Workers-F38020?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare Workers" />
-  <img src="https://img.shields.io/badge/Cloudflare_D1-F38020?style=flat-square&logo=sqlite&logoColor=white" alt="Cloudflare D1" />
-  <img src="https://img.shields.io/badge/Cloudflare_R2-F38020?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare R2" />
+  <img src="https://img.shields.io/badge/Cloudflare_D1-SQLite-F38020?style=flat-square&logo=sqlite&logoColor=white" alt="Cloudflare D1" />
+  <img src="https://img.shields.io/badge/Cloudflare_R2-Storage-F38020?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare R2" />
   <img src="https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 19" />
   <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Node.js-5FA04E?style=flat-square&logo=node.js&logoColor=white" alt="Node.js" />
-  <img src="https://img.shields.io/badge/Python_3.10+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS_v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="Tailwind CSS v4" />
-  <img src="https://img.shields.io/badge/Orama_Search-FF6000?style=flat-square&logo=orama&logoColor=white" alt="Orama" />
-  <img src="https://img.shields.io/badge/Together_AI-Llama_3.3_70B-purple?style=flat-square&logo=meta&logoColor=white" alt="Together AI" />
-  <img src="https://img.shields.io/badge/Playwright_Stealth-2EAD33?style=flat-square&logo=playwright&logoColor=white" alt="Playwright" />
+  <img src="https://img.shields.io/badge/Node.js-20+-5FA04E?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js" />
+  <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="Tailwind CSS v4" />
+  <img src="https://img.shields.io/badge/Orama-Search-FF6000?style=flat-square" alt="Orama" />
+  <img src="https://img.shields.io/badge/Together_AI-Llama_3.3_70B-7928CA?style=flat-square&logo=meta&logoColor=white" alt="Together AI" />
+  <img src="https://img.shields.io/badge/Playwright-Stealth-2EAD33?style=flat-square&logo=playwright&logoColor=white" alt="Playwright" />
 </p>
 
 <p align="center">
   <a href="https://buymeacoffee.com/postdated" target="_blank">
-    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="42" width="150" />
+    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="42" />
   </a>
 </p>
 
@@ -199,4 +199,6 @@ Detailed release history and changelog notes are maintained in [CHANGELOG.md](CH
 ## License
 
 This project is licensed under the Apache-2.0 License. See the [LICENSE](LICENSE) file for details.
+
+
 
