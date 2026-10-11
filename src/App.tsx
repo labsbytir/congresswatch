@@ -1,3 +1,4 @@
+import { LlmActionMenu } from "./components/LlmActionMenu";
 import { AiBadge } from './components/AiBadge';
 import React, { useState, useEffect, useMemo } from 'react';
 import { StickyHeader } from './components/StickyHeader';
@@ -398,6 +399,7 @@ export default function App() {
                     <p className="text-sm font-medium text-neutral-600 mt-0.5">Live statutory records synchronized from Congress.gov and Cloudflare D1.</p>
                   </div>
                   <button id="cw-action-btn" onClick={() => setIsChatOpen(true)} className="cursor-pointer transition-transform hover:scale-105 flex items-center"><AiBadge size="md" label="Smart AI" active={true} /></button>
+                  <LlmActionMenu markdownUrl="/llms.txt" title="CongressWatch Index" />
                 </div>
 
                 {/* Data Table */}

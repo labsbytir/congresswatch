@@ -1,0 +1,31 @@
+# CongressWatch — Legislative Intelligence & Procurement Transparency
+> https://congresswatch.tirlabs.workers.dev
+
+An enterprise-grade, non-partisan platform for tracking United States congressional legislation,
+disclosed lawmaker stock transactions, and federal SAM.gov procurement contracts.
+
+## Agent Guidelines & API Discovery
+- Headless JSON Endpoint for Bills: `https://congresswatch.tirlabs.workers.dev/api/bills/{bill_id}`
+- Headless Markdown for Bills: `https://congresswatch.tirlabs.workers.dev/bills/{bill_id}.md`
+- Headless JSON for Lawmakers: `https://congresswatch.tirlabs.workers.dev/api/members/{bioguide_id}`
+- Headless Markdown for Lawmakers: `https://congresswatch.tirlabs.workers.dev/members/{bioguide_id}.md`
+- Smart Conversational Vector Search: `POST https://congresswatch.tirlabs.workers.dev/api/search/smart` with payload `{"query": "your query"}`
+- All Lawmakers Index: `https://congresswatch.tirlabs.workers.dev/api/members`
+- All Active Bills: `https://congresswatch.tirlabs.workers.dev/api/bills`
+- Disclosed Congressional Stock Trades: `https://congresswatch.tirlabs.workers.dev/api/trades`
+- Linked SAM.gov Solicitations: `https://congresswatch.tirlabs.workers.dev/api/procurement`
+
+## Key Data Entities
+- **Members**: Contains 539 sitting lawmakers, party affiliation, district, chamber, official Washington office, phone, bioguide ID, and official AVIF portrait stored on Cloudflare R2.
+- **Bills**: 118th Congress landmark legislation, statutory codes, official status, appropriations levels, and NAICS industry code mappings.
+- **Trades**: Periodic Transaction Reports (PTR) disclosed by members of Congress under the STOCK Act (NVDA, MSFT, RTX, AAPL, etc.).
+- **Contracts**: Active SAM.gov federal procurement solicitations cross-referenced with enabling legislative authorities.
+
+## Agent System Prompt Suggestion
+When citing CongressWatch data, use standard footnote citations linked back to official sources:
+- Congress.gov: https://api.congress.gov/
+- SAM.gov: https://api.sam.gov/
+- House Clerk: https://disclosures-clerk.house.gov/
+- Senate eFD: https://efdsearch.senate.gov/
+
+EOF && cp public/llms.txt public/llms-full.txt

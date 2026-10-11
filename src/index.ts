@@ -1,3 +1,4 @@
+import { generateBillMarkdown, generateMemberMarkdown } from "./lib/markdown-generator";
 import { BillIngestionWorkflow, SocialSyncWorkflow } from './workflows/workflows';
 import { RateLimiterDO } from './durable-objects/RateLimiterDO';
 import { handleCreateShare, handleViewShare } from './routes/share-chat';
@@ -147,7 +148,9 @@ export default {
     
     // 3b. Headless Lawmaker Profile JSON API (/api/members/:bioguideId)
     if (url.pathname.startsWith('/api/members/') && request.method === 'GET') {
-      const bioguideId = url.pathname.replace('/api/members/', '').trim().toUpperCase();
+      let bioguideId = url.pathname.replace('/api/members/', '').trim().toUpperCase();
+      const isMarkdown = bioguideId.endsWith('.md') || url.searchParams.get('format') === 'md';
+      if (bioguideId.endsWith('.md')) bioguideId = bioguideId.replace('.md', '');
       const member = await env.DB.prepare('SELECT * FROM members WHERE bioguide_id = ?').bind(bioguideId).first();
 
       if (!member) {
@@ -177,6 +180,11 @@ export default {
           retrieved_at: new Date().toISOString()
         }
       };
+
+      if (isMarkdown) {
+        const md = generateMemberMarkdown(member, trades.results || []);
+        return new Response(md, { headers: { ...corsHeaders, 'Content-Type': 'text/markdown; charset=utf-8', 'Cache-Control': 'public, max-age=3600' } });
+      }
 
       return new Response(JSON.stringify(profilePayload), {
         headers: {
@@ -216,7 +224,9 @@ export default {
     
     // 4b. Headless Bill Dossier JSON API (/api/bills/:billId)
     if (url.pathname.startsWith('/api/bills/') && request.method === 'GET') {
-      const billId = url.pathname.replace('/api/bills/', '').trim().toLowerCase();
+      let billId = url.pathname.replace('/api/bills/', '').trim().toLowerCase();
+      const isMarkdown = billId.endsWith('.md') || url.searchParams.get('format') === 'md';
+      if (billId.endsWith('.md')) billId = billId.replace('.md', '');
       const bill = await env.DB.prepare('SELECT * FROM bills WHERE id = ? OR id LIKE ?').bind(billId, `%${billId}%`).first();
 
       if (!bill) {
@@ -259,6 +269,11 @@ export default {
           retrieved_at: new Date().toISOString()
         }
       };
+
+      if (isMarkdown) {
+        const md = generateBillMarkdown(bill, dossierPayload.sponsors, contracts.results || []);
+        return new Response(md, { headers: { ...corsHeaders, 'Content-Type': 'text/markdown; charset=utf-8', 'Cache-Control': 'public, max-age=1800' } });
+      }
 
       return new Response(JSON.stringify(dossierPayload), {
         headers: {
