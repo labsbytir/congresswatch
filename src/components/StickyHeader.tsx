@@ -29,7 +29,7 @@ export const StickyHeader: React.FC<HeaderProps> = ({
         <div className="flex items-center gap-3">
           <a href="/insider-trades" className="hover:text-white transition-colors">Congressional Trades</a>
           <span>•</span>
-          <a href="/procurement" className="hover:text-white transition-colors">SAM.gov Contracts</a>
+          <a href="/procurement" className="hover:text-white transition-colors">Contracts</a>
           <span>•</span>
           <a href="/fantasy" className="hover:text-amber-400 transition-colors">Fantasy Congress</a>
           <span>•</span>
@@ -55,7 +55,7 @@ export const StickyHeader: React.FC<HeaderProps> = ({
             href="/bills" 
             className={`px-3 py-2 rounded-md transition-colors ${activeTab === 'legislation' ? 'text-white bg-neutral-900 font-semibold' : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60'}`}
           >
-            Bills & Laws
+            Bills
           </a>
           <a 
             href="/congress" 
@@ -73,13 +73,13 @@ export const StickyHeader: React.FC<HeaderProps> = ({
             href="/procurement" 
             className={`px-3 py-2 rounded-md transition-colors ${activeTab === 'procurement' ? 'text-white bg-neutral-900 font-semibold' : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60'}`}
           >
-            SAM.gov Solicitations
+            Contracts
           </a>
           <a 
             href="/districts" 
             className={`px-3 py-2 rounded-md transition-colors ${activeTab === 'districts' ? 'text-white bg-neutral-900 font-semibold' : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60'}`}
           >
-            District Map
+            Map
           </a>
         </nav>
 

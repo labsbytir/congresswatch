@@ -37,6 +37,34 @@ export default {
     }
 
     // 2. Health & Status
+    // R2 Member AVIF Portrait Streamer (/watchers/congresswatch/members/:id.avif)
+    if (url.pathname.startsWith('/watchers/congresswatch/members/') && url.pathname.endsWith('.avif')) {
+      const filename = url.pathname.split('/').pop() || '';
+      const r2Key = 'congresswatch/members/' + filename;
+      const object = await env.WATCHERS_BUCKET.get(r2Key);
+
+      if (object) {
+        return new Response(object.body, {
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'image/avif',
+            'Cache-Control': 'public, max-age=31536000, immutable'
+          }
+        });
+      }
+
+      // Fallback
+      const bioId = filename.replace('.avif', '');
+      const fallbackUrl = 'https://raw.githubusercontent.com/unitedstates/images/gh-pages/congress/225x275/' + bioId + '.jpg';
+      const fallbackRes = await fetch(fallbackUrl);
+      if (fallbackRes.ok) {
+        return new Response(fallbackRes.body, {
+          headers: { 'Content-Type': 'image/jpeg', 'Cache-Control': 'public, max-age=86400' }
+        });
+      }
+      return new Response('Portrait not found in R2', { status: 404 });
+    }
+
     if (url.pathname === '/api/health') {
       return new Response(JSON.stringify({
         status: 'healthy',
