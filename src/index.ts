@@ -37,8 +37,41 @@ export default {
     }
 
     // 2. Health & Status
+    // Cloudflare R2 Bill PDF Streamer (/watchers/congresswatch/bills/:congress/:type/:num/original.pdf)
+    if (url.pathname.startsWith('/watchers/congresswatch/bills/') && url.pathname.endsWith('.pdf')) {
+      const parts = url.pathname.split('/');
+      const r2Key = url.pathname.replace('/watchers/', '');
+      const object = await env.WATCHERS_BUCKET.get(r2Key);
+
+      if (object) {
+        return new Response(object.body, {
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/pdf',
+            'Cache-Control': 'public, max-age=31536000, immutable'
+          }
+        });
+      }
+
+      const congress = parts[4] || '118';
+      const bType = parts[5] || 'hr';
+      const bNum = parts[6] || '8070';
+      const fallbackPdf = 'https://www.congress.gov/' + congress + '/bills/' + bType + bNum + '/BILLS-' + congress + bType + bNum + 'ih.pdf';
+      const resPdf = await fetch(fallbackPdf);
+      if (resPdf.ok && resPdf.body) {
+        return new Response(resPdf.body, {
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/pdf',
+            'Cache-Control': 'public, max-age=86400'
+          }
+        });
+      }
+      return new Response('Bill PDF not found', { status: 404 });
+    }
+
     // R2 Member AVIF Portrait Streamer (/watchers/congresswatch/members/:id.avif)
-    if (url.pathname.startsWith('/watchers/congresswatch/members/') && url.pathname.endsWith('.avif')) {
+    if (url.pathname.startsWith('/watchers/congresswatch/members/') && (url.pathname.endsWith('.avif') || url.pathname.endsWith('.webp'))) {
       const filename = url.pathname.split('/').pop() || '';
       const r2Key = 'congresswatch/members/' + filename;
       const object = await env.WATCHERS_BUCKET.get(r2Key);
