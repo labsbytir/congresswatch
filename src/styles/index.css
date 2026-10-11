@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Hermes 3-layer color palette via CSS color-mix() */
+    --brand-navy: #0a192f;
+    --brand-navy-light: #13294b;
+    --brand-blue: #1e40af;
+    --brand-red: #991b1b;
+    --brand-cream: #f8fafc;
+    --brand-slate: #f1f5f9;
+    --brand-border: #e2e8f0;
+
+    /* Semantic mix tokens */
+    --color-primary: color-mix(in srgb, var(--brand-navy) 90%, black);
+    --color-democrat: color-mix(in srgb, var(--brand-blue) 85%, white);
+    --color-republican: color-mix(in srgb, var(--brand-red) 85%, white);
+    --color-card-bg: color-mix(in srgb, var(--brand-cream) 95%, white);
+  }
+
+  body {
+    font-family: 'Satoshi-Variable', 'Satoshi-Regular', sans-serif;
+  }
+}
+
+/* Custom Parallax Continuous Animation */
+@keyframes scrollLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes scrollRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-marquee-left {
+  display: flex;
+  width: 200%;
+  animation: scrollLeft 35s linear infinite;
+}
+
+.animate-marquee-right {
+  display: flex;
+  width: 200%;
+  animation: scrollRight 35s linear infinite;
+}
+
+.animate-marquee-left:hover,
+.animate-marquee-right:hover {
+  animation-play-state: paused;
+}
+
