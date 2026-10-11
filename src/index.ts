@@ -162,18 +162,22 @@ export default {
 
       const trades = await env.DB.prepare('SELECT * FROM congressional_trades WHERE bioguide_id = ? ORDER BY transaction_date DESC LIMIT 20').bind(bioguideId).all();
 
+      const distNum = member.district ? parseInt(member.district, 10) : null;
+      const distCode = member.chamber === 'senate' ? (member.state + '-Senate') : (member.state + '-' + (distNum || 1));
+      const districtRecord = await env.DB.prepare('SELECT * FROM district_demographics WHERE district_code = ?').bind(distCode).first();
+
       const profilePayload = {
         member: {
           ...member,
           social_media: member.social_media ? JSON.parse(member.social_media as string) : {}
         },
         trades: trades.results || [],
-        district_demographics: {
+district_demographics: districtRecord || {
           state: member.state,
           district: member.district,
-          population: 765000,
-          median_household_income: 78500,
-          voter_turnout_pct: 68.4
+          population: 750000,
+          median_household_income: 72000,
+          voter_turnout_pct: 65.0
         },
         source: {
           url: 'https://bioguide.congress.gov/search/bio/' + bioguideId,
