@@ -418,7 +418,7 @@ export default function App() {
           <div className="space-y-2 text-center md:text-left">
             <div className="flex items-center gap-3 justify-center md:justify-start">
               <img 
-                src="/brand/logo.svg" 
+                src="/brand/logo.png" 
                 alt="Congress Watch Logo" 
                 style={{ height: '32px', width: 'auto' }}
               />

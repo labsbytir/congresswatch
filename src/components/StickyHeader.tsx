@@ -42,7 +42,7 @@ export const StickyHeader: React.FC<HeaderProps> = ({
         {/* Brand Logo using Congress Watch Logo Grey.svg */}
         <a href="/" className="flex items-center gap-3 shrink-0 group">
           <img 
-            src="/brand/logo.svg" 
+            src="/brand/logo.png" 
             alt="Congress Watch Logo" 
             style={{ height: '36px', width: 'auto', maxHeight: '36px' }}
             className="object-contain transition-transform group-hover:scale-105"
