@@ -12,7 +12,8 @@ import {
   CapitolIcon, 
   CloseIcon, 
   ExternalLinkIcon,
-  SendIcon
+  SendIcon,
+  DiscordIcon
 } from './components/Icons';
 
 export default function App() {
