@@ -1,3 +1,4 @@
+import { LawmakerAvatar } from './LawmakerAvatar';
 import React, { useEffect, useState } from 'react';
 
 export interface MemberProfileProps {
@@ -85,14 +86,7 @@ export const MemberProfile: React.FC<MemberProfileProps> = ({
       <div className="bg-white border border-neutral-200 rounded-xl p-8 shadow-sm mb-8 flex flex-col md:flex-row gap-8 items-start">
         {/* Official Portrait */}
         <div className="shrink-0 mx-auto md:mx-0">
-          <img
-            src={m.image_r2_path || `https://raw.githubusercontent.com/unitedstates/images/gh-pages/congress/225x275/${m.bioguide_id}.jpg`}
-            alt={`${m.first_name} ${m.last_name}`}
-            className={`w-36 h-44 object-cover rounded-lg border-4 ${partyBorder} shadow-md`}
-            onError={(e: any) => {
-              e.target.src = `https://raw.githubusercontent.com/unitedstates/images/gh-pages/congress/225x275/${m.bioguide_id}.jpg`;
-            }}
-          />
+          <LawmakerAvatar bioguideId={m.bioguide_id} name={`${m.first_name} ${m.last_name}`} party={m.party} className={`w-36 h-44 object-cover rounded-lg border-4 ${partyBorder} shadow-md`} />
           <div className="mt-2 text-center">
             <span className={`text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full inline-block ${partyColor}`}>
               {m.party}

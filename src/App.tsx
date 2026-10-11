@@ -1,3 +1,4 @@
+import { LawmakerAvatar } from './components/LawmakerAvatar';
 import React, { useState, useEffect } from 'react';
 import { StickyHeader } from './components/StickyHeader';
 import { MemberProfile } from './components/MemberProfile';
@@ -275,12 +276,7 @@ export default function App() {
                       onClick={() => setSelectedMemberId(m.bioguide_id)}
                       className="cursor-pointer hover:scale-105 transition-transform p-2.5 rounded-lg border flex items-center gap-3 shrink-0 w-64 bg-blue-950/40 border-blue-900/60 text-blue-200"
                     >
-                      <img
-                        src={m.image_r2_path || `/watchers/congresswatch/members/${m.bioguide_id}.avif`}
-                        alt={`${m.first_name} ${m.last_name}`}
-                        className="w-10 h-10 rounded-full object-cover border-2 border-blue-500 shrink-0"
-                        onError={(e: any) => { e.target.src = `https://raw.githubusercontent.com/unitedstates/images/gh-pages/congress/225x275/${m.bioguide_id}.jpg`; }}
-                      />
+                      <LawmakerAvatar bioguideId={m.bioguide_id} name={`${m.first_name} ${m.last_name}`} party={m.party} className="w-10 h-10 rounded-full object-cover border-2 border-neutral-700 shrink-0" />
                       <div className="truncate text-xs">
                         <div className="font-bold text-white truncate">{m.first_name} {m.last_name}</div>
                         <div className="text-neutral-400">{m.state} {m.district ? `-${m.district}` : ''} • {m.chamber === 'senate' ? 'Senator' : 'Representative'}</div>
@@ -300,12 +296,7 @@ export default function App() {
                       onClick={() => setSelectedMemberId(m.bioguide_id)}
                       className="cursor-pointer hover:scale-105 transition-transform p-2.5 rounded-lg border flex items-center gap-3 shrink-0 w-64 bg-red-950/40 border-red-900/60 text-red-200"
                     >
-                      <img
-                        src={m.image_r2_path || `/watchers/congresswatch/members/${m.bioguide_id}.avif`}
-                        alt={`${m.first_name} ${m.last_name}`}
-                        className="w-10 h-10 rounded-full object-cover border-2 border-red-500 shrink-0"
-                        onError={(e: any) => { e.target.src = `https://raw.githubusercontent.com/unitedstates/images/gh-pages/congress/225x275/${m.bioguide_id}.jpg`; }}
-                      />
+                      <LawmakerAvatar bioguideId={m.bioguide_id} name={`${m.first_name} ${m.last_name}`} party={m.party} className="w-10 h-10 rounded-full object-cover border-2 border-neutral-700 shrink-0" />
                       <div className="truncate text-xs">
                         <div className="font-bold text-white truncate">{m.first_name} {m.last_name}</div>
                         <div className="text-neutral-400">{m.state} {m.district ? `-${m.district}` : ''} • {m.chamber === 'senate' ? 'Senator' : 'Representative'}</div>
