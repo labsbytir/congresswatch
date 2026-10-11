@@ -340,36 +340,52 @@ export default function App() {
                     </thead>
                     <tbody className="divide-y divide-neutral-200">
                       {displayedBills.map((b) => (
-                        <tr key={b.id} className="hover:bg-neutral-50 transition-colors">
-                          <td className="py-3.5 px-4 font-mono font-bold text-blue-700">
-                            {b.bill_type ? b.bill_type.toUpperCase() : 'H.R.'} {b.bill_number}
+                        <tr 
+                          key={b.id} 
+                          onClick={() => setSelectedBillId(b.id)} 
+                          className="cursor-pointer hover:bg-blue-50/40 transition-colors group"
+                        >
+                          <td className="py-3.5 px-4 font-mono font-bold">
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setSelectedBillId(b.id); }}
+                              className="text-blue-700 hover:text-blue-900 hover:underline text-left cursor-pointer"
+                            >
+                              {b.bill_type ? b.bill_type.toUpperCase() : "H.R."} {b.bill_number}
+                            </button>
                           </td>
                           <td className="py-3.5 px-4 max-w-md">
-                            <div className="font-semibold text-neutral-900 leading-snug">{b.title}</div>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setSelectedBillId(b.id); }}
+                              className="font-bold text-neutral-900 group-hover:text-blue-700 hover:underline text-left leading-snug cursor-pointer block"
+                            >
+                              {b.title}
+                            </button>
                             {b.short_title && (
                               <div className="text-neutral-500 text-[11px] mt-0.5">Short title: {b.short_title}</div>
                             )}
                           </td>
                           <td className="py-3.5 px-4 uppercase font-medium text-neutral-700">
-                            {b.bill_type?.startsWith('s') ? 'Senate' : 'House'}
+                            {b.bill_type?.startsWith("s") ? "Senate" : "House"}
                           </td>
-                          <td className="py-3.5 px-4 text-neutral-600 font-mono">{b.introduced_date}</td>
-                          <td className="py-3.5 px-4">
-                            <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                          <td className="py-3.5 px-4 text-neutral-600 font-mono whitespace-nowrap">{b.introduced_date}</td>
+                          <td className="py-3.5 px-4 whitespace-nowrap">
+                            <span className="inline-block whitespace-nowrap px-2.5 py-1 rounded-md text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-2xs">
                               {b.status}
                             </span>
                           </td>
                           <td className="py-3.5 px-4 text-right">
                             <button 
-                              onClick={() => {
-                                setIsChatOpen(true);
-                                setChatMessages([{ role: 'user', text: `Tell me about ${b.title} and its funding impact.` }]);
-                                runAiChat(`Tell me about ${b.title} and its funding impact.`);
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedBillId(b.id);
                               }}
-                              className="bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-semibold px-2.5 py-1 rounded text-xs transition-colors inline-flex items-center gap-1"
+                              className="bg-neutral-100 group-hover:bg-blue-600 group-hover:text-white text-neutral-800 font-semibold px-2.5 py-1 rounded text-xs transition-colors inline-flex items-center gap-1 cursor-pointer"
                             >
-                              Analyze
-                              <ExternalLinkIcon className="w-3 h-3 text-neutral-500" />
+                              View Dossier
+                              <ExternalLinkIcon className="w-3 h-3 opacity-70" />
                             </button>
                           </td>
                         </tr>
