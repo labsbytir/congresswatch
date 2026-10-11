@@ -6,6 +6,7 @@ import {
   ExternalLinkIcon,
   CapitolIcon
 } from './Icons';
+import { LawmakerAvatar } from './LawmakerAvatar';
 
 export interface BillDetailProps {
   billId: string;
@@ -22,7 +23,7 @@ export const BillDetail: React.FC<BillDetailProps> = ({
 }) => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'timeline' | 'diff' | 'contracts'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'pdf' | 'timeline' | 'contracts' | 'diff'>('overview');
 
   useEffect(() => {
     setLoading(true);
@@ -40,9 +41,9 @@ export const BillDetail: React.FC<BillDetailProps> = ({
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto px-6 py-16 text-center text-neutral-500 font-satoshi">
-        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-sm">Loading official legislative dossier from edge...</p>
+      <div className="max-w-6xl mx-auto px-6 py-20 text-center font-satoshi">
+        <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-base font-bold text-neutral-800">Loading official congressional dossier from edge...</p>
       </div>
     );
   }
@@ -101,113 +102,127 @@ export const BillDetail: React.FC<BillDetailProps> = ({
     }
   ];
 
+  // Official PDF URL on Congress.gov
+  const officialPdfUrl = `https://www.congress.gov/118/bills/${b.bill_type}/${b.bill_type}${b.bill_number}/BILLS-118${b.bill_type}${b.bill_number}ih.pdf`;
+
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10 font-satoshi">
+    <div className="max-w-6xl mx-auto px-6 py-10 font-satoshi text-neutral-900">
       {/* Top Breadcrumb & Actions Bar */}
-      <div className="flex items-center justify-between mb-6 pb-4 border-b border-neutral-200 text-xs">
-        <button onClick={onBack} className="text-blue-700 hover:underline font-bold flex items-center gap-1.5">
-          <ArrowLeftIcon className="w-3.5 h-3.5" />
-          Back to Legislative Directory
+      <div className="flex items-center justify-between mb-8 pb-4 border-b border-neutral-300 text-sm">
+        <button onClick={onBack} className="text-blue-800 hover:text-blue-950 font-bold flex items-center gap-2 cursor-pointer transition-colors">
+          <ArrowLeftIcon className="w-4 h-4" />
+          <span>Back to Legislative Directory</span>
         </button>
         <div className="flex items-center gap-3">
           <a
             href={`/api/bills/${billId}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-neutral-100 hover:bg-neutral-200 text-neutral-700 px-3 py-1 rounded font-mono font-semibold transition-colors"
+            className="bg-neutral-100 hover:bg-neutral-200 text-neutral-800 px-3.5 py-1.5 rounded font-mono font-bold text-xs transition-colors border border-neutral-300"
           >
             {'{ }'} Headless Bill JSON ↗
           </a>
           <button
             onClick={() => onAskAi(`Analyze legal changes, funding authorizations, and key provisions of ${b.title}`)}
-            className="bg-[#0a192f] hover:bg-neutral-800 text-white px-3 py-1 rounded font-semibold transition-colors flex items-center gap-1.5"
+            className="bg-[#0a192f] hover:bg-neutral-800 text-white px-4 py-1.5 rounded font-bold text-xs transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
           >
-            <SparklesIcon className="w-3.5 h-3.5 text-blue-400" />
-            Analyze with AI
+            <SparklesIcon className="w-4 h-4 text-blue-400" />
+            <span>Analyze with AI</span>
           </button>
         </div>
       </div>
 
       {/* Bill Header Dossier */}
-      <div className="bg-white border border-neutral-200 rounded-xl p-8 shadow-sm mb-8">
-        <div className="flex flex-wrap items-center gap-3 mb-2">
-          <span className="bg-blue-900 text-white font-mono font-bold text-xs px-2.5 py-0.5 rounded uppercase">
+      <div className="bg-white border-2 border-neutral-300 rounded-xl p-8 shadow-sm mb-10">
+        <div className="flex flex-wrap items-center gap-3 mb-3">
+          <span className="bg-[#0a192f] text-white font-mono font-black text-sm px-3 py-1 rounded tracking-wide">
             {b.bill_type ? b.bill_type.toUpperCase() : 'H.R.'} {b.bill_number}
           </span>
-          <span className="text-xs text-neutral-500 font-mono">118th Congress (2023-2024)</span>
-          <span className="text-xs bg-emerald-100 text-emerald-800 font-semibold px-2 py-0.5 rounded-full border border-emerald-300">
+          <span className="text-sm text-neutral-700 font-bold font-mono">118th Congress (2023–2024)</span>
+          <span className="inline-block whitespace-nowrap text-xs bg-emerald-100 text-emerald-900 font-black px-3 py-1 rounded-full border border-emerald-400">
             {b.status}
           </span>
         </div>
 
-        <h1 className="text-2xl md:text-3xl font-black text-neutral-900 leading-tight">
+        {/* Title: Satoshi Weight 700 / Bold */}
+        <h1 className="text-3xl md:text-4xl font-extrabold text-neutral-950 leading-snug tracking-tight">
           {b.title}
         </h1>
         {b.short_title && (
-          <p className="text-sm font-semibold text-neutral-600 mt-1">
+          <p className="text-base font-bold text-neutral-700 mt-2">
             Short Title: {b.short_title}
           </p>
         )}
 
         {/* Key Metrics Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-neutral-100 text-xs">
-          <div className="p-3 bg-neutral-50 rounded border border-neutral-100">
-            <span className="text-neutral-500 font-medium">Introduced Date</span>
-            <div className="text-sm font-bold text-neutral-900 font-mono mt-0.5">{b.introduced_date}</div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-6 border-t border-neutral-200 text-sm">
+          <div className="p-4 bg-[#f8fafc] rounded-lg border border-neutral-200">
+            <span className="text-xs uppercase font-black tracking-wider text-neutral-600 block">Introduced Date</span>
+            <div className="text-base font-extrabold text-neutral-950 font-mono mt-1">{b.introduced_date}</div>
           </div>
-          <div className="p-3 bg-neutral-50 rounded border border-neutral-100">
-            <span className="text-neutral-500 font-medium">Latest Action</span>
-            <div className="text-sm font-bold text-neutral-900 font-mono mt-0.5">{b.latest_action_date || 'In Committee'}</div>
+          <div className="p-4 bg-[#f8fafc] rounded-lg border border-neutral-200">
+            <span className="text-xs uppercase font-black tracking-wider text-neutral-600 block">Latest Action</span>
+            <div className="text-base font-extrabold text-neutral-950 font-mono mt-1">{b.latest_action_date || 'In Committee'}</div>
           </div>
-          <div className="p-3 bg-neutral-50 rounded border border-neutral-100">
-            <span className="text-neutral-500 font-medium">AI Passage Likelihood</span>
-            <div className="text-sm font-bold text-emerald-600 font-mono mt-0.5">88.4% (High)</div>
+          <div className="p-4 bg-[#f8fafc] rounded-lg border border-neutral-200">
+            <span className="text-xs uppercase font-black tracking-wider text-neutral-600 block">AI Passage Likelihood</span>
+            <div className="text-base font-extrabold text-emerald-700 font-mono mt-1">88.4% (High)</div>
           </div>
-          <div className="p-3 bg-neutral-50 rounded border border-neutral-100">
-            <span className="text-neutral-500 font-medium">Appropriation Level</span>
-            <div className="text-sm font-bold text-neutral-900 font-mono mt-0.5">$849.8B Authorized</div>
+          <div className="p-4 bg-[#f8fafc] rounded-lg border border-neutral-200">
+            <span className="text-xs uppercase font-black tracking-wider text-neutral-600 block">Appropriations</span>
+            <div className="text-base font-extrabold text-neutral-950 font-mono mt-1">$849.8B Authorized</div>
           </div>
         </div>
       </div>
 
-      {/* Tabs Navigation */}
-      <div className="flex border-b border-neutral-200 mb-8 text-xs font-semibold">
+      {/* Tabs Navigation: Bold, Large (15-16px) with Satoshi 700 */}
+      <div className="flex flex-wrap border-b-2 border-neutral-300 mb-8 text-[15px] font-bold gap-1">
         <button
           onClick={() => setActiveTab('overview')}
-          className={`pb-3 px-4 border-b-2 transition-colors ${
+          className={`pb-3 px-5 border-b-4 transition-all cursor-pointer ${
             activeTab === 'overview'
-              ? 'border-blue-600 text-blue-600 font-bold'
-              : 'border-transparent text-neutral-500 hover:text-neutral-800'
+              ? 'border-blue-700 text-blue-900 font-black'
+              : 'border-transparent text-neutral-600 hover:text-neutral-950 hover:border-neutral-300'
           }`}
         >
           Legislative Overview & Sponsors
         </button>
         <button
+          onClick={() => setActiveTab('pdf')}
+          className={`pb-3 px-5 border-b-4 transition-all cursor-pointer ${
+            activeTab === 'pdf'
+              ? 'border-blue-700 text-blue-900 font-black'
+              : 'border-transparent text-neutral-600 hover:text-neutral-950 hover:border-neutral-300'
+          }`}
+        >
+          Official PDF Document
+        </button>
+        <button
           onClick={() => setActiveTab('timeline')}
-          className={`pb-3 px-4 border-b-2 transition-colors ${
+          className={`pb-3 px-5 border-b-4 transition-all cursor-pointer ${
             activeTab === 'timeline'
-              ? 'border-blue-600 text-blue-600 font-bold'
-              : 'border-transparent text-neutral-500 hover:text-neutral-800'
+              ? 'border-blue-700 text-blue-900 font-black'
+              : 'border-transparent text-neutral-600 hover:text-neutral-950 hover:border-neutral-300'
           }`}
         >
           Timeline & Milestones ({timelineEvents.length})
         </button>
         <button
           onClick={() => setActiveTab('contracts')}
-          className={`pb-3 px-4 border-b-2 transition-colors ${
+          className={`pb-3 px-5 border-b-4 transition-all cursor-pointer ${
             activeTab === 'contracts'
-              ? 'border-blue-600 text-blue-600 font-bold'
-              : 'border-transparent text-neutral-500 hover:text-neutral-800'
+              ? 'border-blue-700 text-blue-900 font-black'
+              : 'border-transparent text-neutral-600 hover:text-neutral-950 hover:border-neutral-300'
           }`}
         >
-          SAM.gov Contracts Linked ({contracts.length})
+          Linked Contracts ({contracts.length})
         </button>
         <button
           onClick={() => setActiveTab('diff')}
-          className={`pb-3 px-4 border-b-2 transition-colors ${
+          className={`pb-3 px-5 border-b-4 transition-all cursor-pointer ${
             activeTab === 'diff'
-              ? 'border-blue-600 text-blue-600 font-bold'
-              : 'border-transparent text-neutral-500 hover:text-neutral-800'
+              ? 'border-blue-700 text-blue-900 font-black'
+              : 'border-transparent text-neutral-600 hover:text-neutral-950 hover:border-neutral-300'
           }`}
         >
           Redline Version Comparison
@@ -218,8 +233,8 @@ export const BillDetail: React.FC<BillDetailProps> = ({
       {activeTab === 'overview' && (
         <div className="space-y-8">
           {/* Sponsors Section with AVIF portraits */}
-          <div className="bg-white border border-neutral-200 rounded-xl p-6 shadow-sm">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-neutral-800 mb-4">
+          <div className="bg-white border border-neutral-300 rounded-xl p-6 shadow-sm">
+            <h2 className="text-base font-extrabold uppercase tracking-wider text-neutral-900 mb-4">
               Congressional Sponsors & Cosponsors
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -227,22 +242,20 @@ export const BillDetail: React.FC<BillDetailProps> = ({
                 <div
                   key={idx}
                   onClick={() => onSelectMember(s.bioguide_id)}
-                  className="cursor-pointer hover:border-blue-500 transition-colors p-4 rounded-lg border border-neutral-200 flex items-center gap-4 bg-neutral-50/50"
+                  className="cursor-pointer hover:border-blue-600 hover:shadow-md transition-all p-4 rounded-xl border-2 border-neutral-200 flex items-center gap-4 bg-[#f8fafc]"
                 >
-                  <img
-                    src={s.photo || `/watchers/congresswatch/members/${s.bioguide_id}.avif`}
-                    alt={s.name}
-                    className="w-14 h-16 rounded object-cover border-2 border-neutral-300 shrink-0"
-                    onError={(e: any) => {
-                      e.target.src = `https://raw.githubusercontent.com/unitedstates/images/gh-pages/congress/225x275/${s.bioguide_id}.jpg`;
-                    }}
+                  <LawmakerAvatar
+                    bioguideId={s.bioguide_id}
+                    name={s.name}
+                    party={s.party}
+                    className="w-16 h-18 rounded-lg object-cover border-2 border-neutral-400 shrink-0"
                   />
-                  <div className="text-xs">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">{s.role}</span>
-                    <div className="text-sm font-bold text-neutral-900">{s.name}</div>
-                    <div className="text-neutral-500">{s.party} • {s.state}</div>
-                    <span className="text-blue-600 hover:underline text-[11px] font-medium mt-1 inline-block">
-                      View Full Member Dossier →
+                  <div className="text-sm">
+                    <span className="text-xs font-black uppercase tracking-wider text-neutral-500 block">{s.role}</span>
+                    <div className="text-base font-extrabold text-neutral-950 mt-0.5">{s.name}</div>
+                    <div className="text-neutral-700 font-bold text-xs mt-0.5">{s.party} • {s.state}</div>
+                    <span className="text-blue-700 hover:underline text-xs font-bold mt-1 inline-block">
+                      View Full Lawmaker Dossier →
                     </span>
                   </div>
                 </div>
@@ -250,12 +263,12 @@ export const BillDetail: React.FC<BillDetailProps> = ({
             </div>
           </div>
 
-          {/* Official Plain-English Summary */}
-          <div className="bg-white border border-neutral-200 rounded-xl p-6 shadow-sm">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-neutral-800 mb-3">
+          {/* Official Legislative Summary (Medium-to-Bold Weight, High Contrast) */}
+          <div className="bg-white border border-neutral-300 rounded-xl p-6 shadow-sm">
+            <h2 className="text-base font-extrabold uppercase tracking-wider text-neutral-900 mb-3">
               Official Legislative Summary
             </h2>
-            <div className="text-sm text-neutral-800 leading-relaxed space-y-3">
+            <div className="text-base font-medium text-neutral-900 leading-relaxed space-y-4">
               <p>
                 This legislation authorizes appropriations for fiscal year 2025 for military activities of the Department of Defense, for military construction, and for defense activities of the Department of Energy, to prescribe military personnel strengths for such fiscal year, and for other purposes.
               </p>
@@ -267,37 +280,71 @@ export const BillDetail: React.FC<BillDetailProps> = ({
         </div>
       )}
 
-      {/* Tab 2: Timeline Milestones (TimelineJS model) */}
+      {/* Tab 2: Official PDF Document */}
+      {activeTab === 'pdf' && (
+        <div className="bg-white border border-neutral-300 rounded-xl p-6 shadow-sm space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-neutral-200">
+            <div>
+              <h2 className="text-base font-extrabold uppercase tracking-wider text-neutral-900">
+                Official Government PDF Text
+              </h2>
+              <p className="text-xs font-medium text-neutral-600">
+                Published by the Government Publishing Office (GPO) and Congress.gov
+              </p>
+            </div>
+            <a
+              href={officialPdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-xs"
+            >
+              <DocumentIcon className="w-4 h-4 text-white" />
+              <span>Download Official PDF ↗</span>
+            </a>
+          </div>
+
+          {/* Embedded PDF Viewer Frame */}
+          <div className="w-full h-[650px] border-2 border-neutral-200 rounded-lg overflow-hidden bg-neutral-100 flex flex-col items-center justify-center">
+            <iframe
+              src={`https://docs.google.com/viewer?url=${encodeURIComponent(officialPdfUrl)}&embedded=true`}
+              title="Official Bill PDF"
+              className="w-full h-full"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Tab 3: Timeline Milestones */}
       {activeTab === 'timeline' && (
-        <div className="bg-white border border-neutral-200 rounded-xl p-6 shadow-sm">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-neutral-800 mb-6">
+        <div className="bg-white border border-neutral-300 rounded-xl p-6 shadow-sm">
+          <h2 className="text-base font-extrabold uppercase tracking-wider text-neutral-900 mb-6">
             Legislative Lifecycle Milestones
           </h2>
-          <div className="relative pl-6 border-l-2 border-blue-600 space-y-8">
+          <div className="relative pl-6 border-l-3 border-blue-700 space-y-8">
             {timelineEvents.map((event: any, idx: number) => (
               <div key={idx} className="relative">
-                <div className="absolute -left-[31px] top-0 w-3.5 h-3.5 rounded-full bg-blue-600 border-2 border-white"></div>
-                <div className="font-mono text-[11px] text-blue-600 font-bold">{event.date}</div>
-                <div className="text-base font-bold text-neutral-900 mt-0.5">{event.title}</div>
-                <div className="text-sm text-neutral-600 mt-1">{event.desc}</div>
+                <div className="absolute -left-[32px] top-0 w-4 h-4 rounded-full bg-blue-700 border-2 border-white shadow-xs"></div>
+                <div className="font-mono text-xs text-blue-800 font-black">{event.date}</div>
+                <div className="text-base font-extrabold text-neutral-950 mt-0.5">{event.title}</div>
+                <div className="text-sm font-medium text-neutral-700 mt-1">{event.desc}</div>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Tab 3: SAM.gov Contracts */}
+      {/* Tab 4: Linked Contracts */}
       {activeTab === 'contracts' && (
-        <div className="bg-white border border-neutral-200 rounded-xl shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-neutral-200 bg-[#f8fafc] flex items-center justify-between">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-neutral-800">
+        <div className="bg-white border border-neutral-300 rounded-xl shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-neutral-300 bg-[#f8fafc] flex items-center justify-between">
+            <h2 className="text-base font-extrabold uppercase tracking-wider text-neutral-900">
               Active Federal Procurement Solicitations Linked
             </h2>
-            <span className="text-xs text-neutral-500 font-mono">Matched via NAICS & Statutory Authority</span>
+            <span className="text-xs text-neutral-700 font-mono font-bold">Matched via NAICS & Statutory Authority</span>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-[#f1f5f9] text-neutral-700 font-bold uppercase tracking-wider border-b border-neutral-200">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-[#f1f5f9] text-neutral-800 font-black uppercase tracking-wider border-b border-neutral-300 text-xs">
                 <tr>
                   <th className="py-3 px-4">Solicitation Number</th>
                   <th className="py-3 px-4">Title & Requirement</th>
@@ -308,14 +355,14 @@ export const BillDetail: React.FC<BillDetailProps> = ({
               </thead>
               <tbody className="divide-y divide-neutral-200">
                 {contracts.map((c: any, idx: number) => (
-                  <tr key={idx} className="hover:bg-neutral-50">
-                    <td className="py-3.5 px-4 font-mono font-bold text-blue-700">{c.solicitation}</td>
+                  <tr key={idx} className="hover:bg-neutral-50 font-medium text-neutral-900">
+                    <td className="py-3.5 px-4 font-mono font-bold text-blue-800">{c.solicitation}</td>
                     <td className="py-3.5 px-4 max-w-sm">
-                      <div className="font-semibold text-neutral-900">{c.title}</div>
+                      <div className="font-bold text-neutral-950">{c.title}</div>
                     </td>
-                    <td className="py-3.5 px-4 font-medium text-neutral-700">{c.agency}</td>
-                    <td className="py-3.5 px-4 font-mono text-neutral-600">{c.deadline}</td>
-                    <td className="py-3.5 px-4 font-mono text-[11px] text-neutral-500">{c.naics}</td>
+                    <td className="py-3.5 px-4 font-bold text-neutral-800">{c.agency}</td>
+                    <td className="py-3.5 px-4 font-mono text-neutral-700">{c.deadline}</td>
+                    <td className="py-3.5 px-4 font-mono text-xs text-neutral-600 font-bold">{c.naics}</td>
                   </tr>
                 ))}
               </tbody>
@@ -324,30 +371,30 @@ export const BillDetail: React.FC<BillDetailProps> = ({
         </div>
       )}
 
-      {/* Tab 4: Redline Diff Viewer */}
+      {/* Tab 5: Redline Diff Viewer */}
       {activeTab === 'diff' && (
-        <div className="bg-white border border-neutral-200 rounded-xl p-6 shadow-sm">
+        <div className="bg-white border border-neutral-300 rounded-xl p-6 shadow-sm">
           <div className="flex items-center justify-between pb-4 border-b border-neutral-200 mb-4">
             <div>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-neutral-800">
+              <h2 className="text-base font-extrabold uppercase tracking-wider text-neutral-900">
                 Version Redline Comparison
               </h2>
-              <p className="text-xs text-neutral-500">Comparing Introduced in House (IH) vs. Passed House (EH)</p>
+              <p className="text-sm font-medium text-neutral-600">Comparing Introduced in House (IH) vs. Passed House (EH)</p>
             </div>
-            <span className="font-mono text-xs px-2.5 py-1 rounded bg-neutral-100 text-neutral-700 font-bold">
+            <span className="font-mono text-xs px-3 py-1.5 rounded bg-neutral-100 text-neutral-900 font-black border border-neutral-300">
               +14 Additions / -6 Deletions
             </span>
           </div>
 
-          <div className="font-mono text-xs border border-neutral-200 rounded bg-[#f8fafc] p-4 space-y-2 overflow-x-auto">
-            <div className="text-neutral-500">// Section 402 - Mandatory Critical Mineral Sourcing</div>
-            <div className="bg-rose-100 text-rose-800 px-2 py-1 rounded line-through">
+          <div className="font-mono text-sm border-2 border-neutral-200 rounded-lg bg-[#f8fafc] p-5 space-y-3 overflow-x-auto">
+            <div className="text-neutral-500 font-bold">// Section 402 - Mandatory Critical Mineral Sourcing</div>
+            <div className="bg-rose-100 text-rose-900 px-3 py-1.5 rounded font-bold line-through">
               - (a) The Secretary shall, within 180 days of enactment, prepare an initial advisory assessment.
             </div>
-            <div className="bg-emerald-100 text-emerald-800 px-2 py-1 rounded font-semibold">
+            <div className="bg-emerald-100 text-emerald-900 px-3 py-1.5 rounded font-bold">
               + (a) The Secretary shall, within 90 days of enactment, enforce a mandatory domestic procurement requirement.
             </div>
-            <div className="text-neutral-700 px-2">
+            <div className="text-neutral-800 font-medium px-3">
               (b) Compliance shall be monitored across all Tier 1 and Tier 2 defense contractors.
             </div>
           </div>

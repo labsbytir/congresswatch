@@ -24,9 +24,33 @@
   }
 
   body {
-    font-family: 'Satoshi-Variable', 'Satoshi-Regular', sans-serif;
-    color: #0f172a;
+    font-family: 'Satoshi-Variable', 'Satoshi-Medium', sans-serif;
+    font-weight: 500; /* Satoshi Medium baseline for rich human readability */
+    color: #090d16;
     line-height: 1.6;
+    background-color: #f8fafc;
+  }
+
+  /* Global Headings Mandate: Satoshi weight 700+ */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Satoshi-Variable', 'Satoshi-Bold', sans-serif;
+    font-weight: 700;
+    color: #020617;
+    letter-spacing: -0.015em;
+  }
+
+  h1 { font-weight: 800; }
+  h2 { font-weight: 700; }
+  h3 { font-weight: 700; }
+
+  /* Body text elements use medium weight (500) and strong elements use 700 */
+  p, li, span, div, td {
+    color: #0f172a;
+  }
+
+  strong, b, th {
+    font-weight: 700;
+    color: #020617;
   }
 }
 
