@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/labsbytir/congresswatch">
-    <img src="https://raw.githubusercontent.com/labsbytir/congresswatch/main/public/brand/logo.svg" alt="Congress Watch Logo" width="420" />
+    <img src="public/brand/logo.svg" alt="Congress Watch Logo" width="420" />
   </a>
 </p>
 
@@ -11,36 +11,36 @@
 
 <p align="center">
   <a href="https://github.com/labsbytir/congresswatch/actions">
-    <img src="https://img.shields.io/badge/CI-Passing-success?style=flat-square&logo=github" alt="CI Status" />
+    <img src=".github/badges/ci.svg" alt="CI Status" />
   </a>
   <a href="https://discord.gg/vXkPvAkuvN">
-    <img src="https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=flat-square&logo=discord&logoColor=white" alt="Discord Server" />
+    <img src=".github/badges/discord.svg" alt="Discord Server" />
   </a>
   <a href="https://buymeacoffee.com/postdated">
-    <img src="https://img.shields.io/badge/Buy_Me_A_Coffee-Donate-FFDD00?style=flat-square&logo=buymeacoffee&logoColor=black" alt="Buy Me A Coffee Badge" />
+    <img src=".github/badges/buymeacoffee.svg" alt="Buy Me A Coffee" />
   </a>
   <a href="LICENSE">
-    <img src="https://img.shields.io/badge/License-Apache_2.0-blue?style=flat-square" alt="License" />
+    <img src=".github/badges/license.svg" alt="License" />
   </a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Cloudflare_Workers-F38020?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare Workers" />
-  <img src="https://img.shields.io/badge/Cloudflare_D1-SQLite-F38020?style=flat-square&logo=sqlite&logoColor=white" alt="Cloudflare D1" />
-  <img src="https://img.shields.io/badge/Cloudflare_R2-Storage-F38020?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare R2" />
-  <img src="https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 19" />
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Node.js-20+-5FA04E?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js" />
-  <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="Tailwind CSS v4" />
-  <img src="https://img.shields.io/badge/Orama-Search-FF6000?style=flat-square" alt="Orama" />
-  <img src="https://img.shields.io/badge/Together_AI-Llama_3.3_70B-7928CA?style=flat-square&logo=meta&logoColor=white" alt="Together AI" />
-  <img src="https://img.shields.io/badge/Playwright-Stealth-2EAD33?style=flat-square&logo=playwright&logoColor=white" alt="Playwright" />
+  <img src=".github/badges/cloudflare_workers.svg" alt="Cloudflare Workers" />
+  <img src=".github/badges/cloudflare_d1.svg" alt="Cloudflare D1" />
+  <img src=".github/badges/cloudflare_r2.svg" alt="Cloudflare R2" />
+  <img src=".github/badges/react.svg" alt="React 19" />
+  <img src=".github/badges/typescript.svg" alt="TypeScript" />
+  <img src=".github/badges/nodejs.svg" alt="Node.js" />
+  <img src=".github/badges/python.svg" alt="Python" />
+  <img src=".github/badges/tailwind.svg" alt="Tailwind CSS v4" />
+  <img src=".github/badges/orama.svg" alt="Orama Search" />
+  <img src=".github/badges/together_ai.svg" alt="Together AI" />
+  <img src=".github/badges/playwright.svg" alt="Playwright Stealth" />
 </p>
 
 <p align="center">
   <a href="https://buymeacoffee.com/postdated" target="_blank">
-    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="42" />
+    <img src="public/brand/bmac-button.png" alt="Buy Me A Coffee" height="42" />
   </a>
 </p>
 
@@ -199,6 +199,7 @@ Detailed release history and changelog notes are maintained in [CHANGELOG.md](CH
 ## License
 
 This project is licensed under the Apache-2.0 License. See the [LICENSE](LICENSE) file for details.
+
 
 
 
