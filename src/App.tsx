@@ -1,20 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { StickyHeader } from './components/StickyHeader';
+import { MemberProfile } from './components/MemberProfile';
+import { 
+  SearchIcon, 
+  SparklesIcon, 
+  CapitolIcon, 
+  CloseIcon, 
+  ExternalLinkIcon,
+  SendIcon
+} from './components/Icons';
 
 export default function App() {
-  const [searchMode, setSearchMode] = useState<'classic' | 'smart_plus'>('classic');
+  // Default to Smart+ AI search
+  const [searchMode, setSearchMode] = useState<'classic' | 'smart_plus'>('smart_plus');
   const [searchQuery, setSearchQuery] = useState('');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState<Array<{ role: 'user' | 'assistant'; text: string; sources?: any[] }>>([]);
   const [chatInput, setChatInput] = useState('');
   const [isAiLoading, setIsAiLoading] = useState(false);
+  const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
 
   // Real data state fetched from Cloudflare D1
   const [members, setMembers] = useState<any[]>([]);
   const [bills, setBills] = useState<any[]>([]);
 
   useEffect(() => {
-    // Fetch real lawmakers from live API
     fetch('/api/members')
       .then(res => res.json())
       .then(data => {
@@ -22,7 +32,6 @@ export default function App() {
       })
       .catch(err => console.warn('Members fetch fallback:', err));
 
-    // Fetch real bills from live API
     fetch('/api/bills')
       .then(res => res.json())
       .then(data => {
@@ -36,14 +45,12 @@ export default function App() {
     if (!searchQuery.trim()) return;
 
     if (searchMode === 'smart_plus') {
-      // Start conversational AI session
       setIsChatOpen(true);
       const userMsg = searchQuery;
       setChatMessages(prev => [...prev, { role: 'user', text: userMsg }]);
       setSearchQuery('');
       runAiChat(userMsg);
     } else {
-      // Classic filter search
       window.location.href = `/bills?q=${encodeURIComponent(searchQuery)}`;
     }
   };
@@ -92,7 +99,6 @@ export default function App() {
     runAiChat(msg);
   };
 
-  // Fallback bills if API is still warming
   const displayedBills = bills.length > 0 ? bills : [
     {
       id: '118-hr-8070',
@@ -136,218 +142,257 @@ export default function App() {
         onToggleSearchMode={(mode) => setSearchMode(mode)}
       />
 
-      {/* Main Full-Width Content Container (No sidebar on home screen!) */}
+      {/* Main Full-Width Content Container */}
       <main className="flex-1">
-        {/* OpenSecrets Style Hero & Unified Search Header */}
-        <section className="bg-[#0a192f] text-white py-14 px-6 border-b-4 border-blue-600 shadow-md">
-          <div className="max-w-5xl mx-auto text-center space-y-4">
-            <span className="text-xs uppercase font-bold tracking-widest text-blue-400 bg-blue-950/70 px-3.5 py-1.5 rounded-full border border-blue-800/80 inline-block">
-              Investigative Legislative & Procurement Intelligence
-            </span>
-            <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">
-              Tracking Federal Power, Policy & Contracts
-            </h1>
-            <p className="text-neutral-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-              Connect 118th Congress legislation directly to corporate lobbying disclosures, insider stock transactions, and active SAM.gov procurement contracts.
-            </p>
+        {selectedMemberId ? (
+          <MemberProfile
+            bioguideId={selectedMemberId}
+            onBack={() => setSelectedMemberId(null)}
+            onAskAi={(prompt) => {
+              setIsChatOpen(true);
+              setChatMessages([{ role: 'user', text: prompt }]);
+              runAiChat(prompt);
+            }}
+          />
+        ) : (
+          <>
+            {/* OpenSecrets Style Hero & Unified Search Header */}
+            <section className="bg-[#0a192f] text-white py-14 px-6 border-b-4 border-blue-600 shadow-md">
+              <div className="max-w-5xl mx-auto text-center space-y-4">
+                <span className="text-xs uppercase font-bold tracking-widest text-blue-400 bg-blue-950/70 px-3.5 py-1.5 rounded-full border border-blue-800/80 inline-flex items-center gap-1.5">
+                  <CapitolIcon className="w-3.5 h-3.5 text-blue-400" />
+                  Investigative Legislative & Procurement Intelligence
+                </span>
+                <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">
+                  Tracking Federal Power, Policy & Contracts
+                </h1>
+                <p className="text-neutral-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+                  Connect 118th Congress legislation directly to corporate lobbying disclosures, insider stock transactions, and active SAM.gov procurement contracts.
+                </p>
 
-            {/* Universal Search Form */}
-            <form onSubmit={handleSearchSubmit} className="max-w-3xl mx-auto mt-6 bg-white rounded-lg p-2 shadow-2xl flex items-center gap-2 border-2 border-neutral-300 focus-within:border-blue-600 transition-colors">
-              <span className="text-neutral-400 pl-3">🔍</span>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={
-                  searchMode === 'smart_plus'
-                    ? "Ask CongressWatch AI: 'Which Armed Services members bought defense stocks before NDAA?'"
-                    : "Search 539 Lawmakers, Bills (H.R. 8070), Tickers (NVDA), or Solicitations..."
-                }
-                className="flex-1 py-2 px-2 text-neutral-900 text-sm focus:outline-none font-medium"
-              />
-              <button
-                type="button"
-                onClick={() => setSearchMode(searchMode === 'classic' ? 'smart_plus' : 'classic')}
-                className={`text-xs px-3 py-2 rounded font-semibold transition-all shrink-0 ${
-                  searchMode === 'smart_plus'
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm shadow-blue-500/20'
-                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                }`}
-              >
-                {searchMode === 'smart_plus' ? '✨ Smart+ Active' : 'Classic Mode'}
-              </button>
-              <button type="submit" className="bg-[#1e40af] hover:bg-blue-700 text-white px-5 py-2 rounded font-bold text-sm transition-colors shrink-0">
-                Search
-              </button>
-            </form>
-
-            {/* Search Category Pills (OpenSecrets Style) */}
-            <div className="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs text-neutral-300">
-              <span className="font-semibold text-neutral-400">Trending Legislation:</span>
-              <button onClick={() => { setSearchQuery('NDAA FY2025'); }} className="hover:text-white bg-neutral-800/80 px-2.5 py-1 rounded border border-neutral-700">#NDAA FY2025 (H.R. 8070)</button>
-              <button onClick={() => { setSearchQuery('Consolidated Appropriations'); }} className="hover:text-white bg-neutral-800/80 px-2.5 py-1 rounded border border-neutral-700">#Appropriations Package (P.L. 118-47)</button>
-              <button onClick={() => { setSearchQuery('Foreign Adversary App Act'); }} className="hover:text-white bg-neutral-800/80 px-2.5 py-1 rounded border border-neutral-700">#Foreign Adversary Apps (P.L. 118-50)</button>
-              <button onClick={() => { setSearchQuery('Critical Minerals'); }} className="hover:text-white bg-neutral-800/80 px-2.5 py-1 rounded border border-neutral-700">#Critical Minerals Supply Chain</button>
-            </div>
-          </div>
-        </section>
-
-        {/* OpenSecrets Style Executive Stat Blocks */}
-        <section className="max-w-6xl mx-auto px-6 -mt-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white p-5 rounded-lg border border-neutral-200 shadow-sm border-t-4 border-t-blue-600">
-              <div className="text-xs uppercase font-bold text-neutral-500">118th Congress Appropriations</div>
-              <div className="text-2xl font-black text-neutral-900 mt-1 tabular-nums">$851.6B</div>
-              <div className="text-xs text-emerald-600 font-semibold mt-1">↑ Enacted FY2024 Package</div>
-            </div>
-            <div className="bg-white p-5 rounded-lg border border-neutral-200 shadow-sm border-t-4 border-t-amber-500">
-              <div className="text-xs uppercase font-bold text-neutral-500">Active SAM.gov Solicitations</div>
-              <div className="text-2xl font-black text-neutral-900 mt-1 tabular-nums">4,280 Bids</div>
-              <div className="text-xs text-neutral-600 font-medium mt-1">Matched to Statutory Mandates</div>
-            </div>
-            <div className="bg-white p-5 rounded-lg border border-neutral-200 shadow-sm border-t-4 border-t-emerald-600">
-              <div className="text-xs uppercase font-bold text-neutral-500">Disclosed Congressional Trades</div>
-              <div className="text-2xl font-black text-neutral-900 mt-1 tabular-nums">682 Filings</div>
-              <div className="text-xs text-neutral-600 font-medium mt-1">Pelosi, McCaul, Tuberville</div>
-            </div>
-            <div className="bg-white p-5 rounded-lg border border-neutral-200 shadow-sm border-t-4 border-t-purple-600">
-              <div className="text-xs uppercase font-bold text-neutral-500">Verified Members in Database</div>
-              <div className="text-2xl font-black text-neutral-900 mt-1 tabular-nums">539 Lawmakers</div>
-              <div className="text-xs text-neutral-600 font-medium mt-1">100 Senators • 439 Reps</div>
-            </div>
-          </div>
-        </section>
-
-        {/* Bi-Directional Parallax Rails (Real 539 Sitting Lawmakers with Official Photos) */}
-        <section className="my-12 overflow-hidden bg-neutral-900 py-6 border-y border-neutral-800">
-          <div className="max-w-6xl mx-auto px-6 mb-4 flex items-center justify-between text-white">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-300">
-              Capitol Roll Call: 539 Sitting Lawmakers
-            </h3>
-            <span className="text-xs text-neutral-400">Continuous Opposing Partisan Parallax Rails</span>
-          </div>
-
-          {/* Row 1: Leftward Parallax (Democrats) */}
-          <div className="overflow-hidden py-1">
-            <div className="animate-marquee-left flex gap-4">
-              {(members.filter(m => m.party === 'Democrat').slice(0, 20).concat(members.filter(m => m.party === 'Democrat').slice(0, 20))).map((m, i) => (
-                <div
-                  key={i}
-                  className="p-2.5 rounded-lg border flex items-center gap-3 shrink-0 w-64 bg-blue-950/40 border-blue-900/60 text-blue-200"
-                >
-                  <img
-                    src={m.image_r2_path || `https://theunitedstates.io/images/congress/225x275/${m.bioguide_id}.jpg`}
-                    alt={`${m.first_name} ${m.last_name}`}
-                    className="w-10 h-10 rounded-full object-cover border-2 border-blue-500 shrink-0"
-                    onError={(e: any) => { e.target.src = 'https://theunitedstates.io/images/congress/225x275/default.jpg'; }}
+                {/* Universal Search Form */}
+                <form onSubmit={handleSearchSubmit} className="max-w-3xl mx-auto mt-6 bg-white rounded-lg p-2 shadow-2xl flex items-center gap-2 border-2 border-neutral-300 focus-within:border-blue-600 transition-colors">
+                  <span className="text-neutral-400 pl-3">
+                    <SearchIcon className="w-4 h-4 text-neutral-500" />
+                  </span>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={
+                      searchMode === 'smart_plus'
+                        ? "Ask Smart+ AI: 'Which Armed Services members bought defense stocks before NDAA?'"
+                        : "Search 539 Lawmakers, Bills (H.R. 8070), Tickers (NVDA), or Solicitations..."
+                    }
+                    className="flex-1 py-2 px-2 text-neutral-900 text-sm focus:outline-none font-medium"
                   />
-                  <div className="truncate text-xs">
-                    <div className="font-bold text-white truncate">{m.first_name} {m.last_name}</div>
-                    <div className="text-neutral-400">{m.state} {m.district ? `-${m.district}` : ''} • {m.chamber === 'senate' ? 'Senator' : 'Representative'}</div>
-                    <div className="text-blue-300 font-medium text-[11px]">{m.total_terms_years} Years in Congress</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Row 2: Rightward Parallax (Republicans) */}
-          <div className="overflow-hidden py-1 mt-2">
-            <div className="animate-marquee-right flex gap-4">
-              {(members.filter(m => m.party === 'Republican').slice(0, 20).concat(members.filter(m => m.party === 'Republican').slice(0, 20))).map((m, i) => (
-                <div
-                  key={i}
-                  className="p-2.5 rounded-lg border flex items-center gap-3 shrink-0 w-64 bg-red-950/40 border-red-900/60 text-red-200"
-                >
-                  <img
-                    src={m.image_r2_path || `https://theunitedstates.io/images/congress/225x275/${m.bioguide_id}.jpg`}
-                    alt={`${m.first_name} ${m.last_name}`}
-                    className="w-10 h-10 rounded-full object-cover border-2 border-red-500 shrink-0"
-                    onError={(e: any) => { e.target.src = 'https://theunitedstates.io/images/congress/225x275/default.jpg'; }}
-                  />
-                  <div className="truncate text-xs">
-                    <div className="font-bold text-white truncate">{m.first_name} {m.last_name}</div>
-                    <div className="text-neutral-400">{m.state} {m.district ? `-${m.district}` : ''} • {m.chamber === 'senate' ? 'Senator' : 'Representative'}</div>
-                    <div className="text-red-300 font-medium text-[11px]">{m.total_terms_years} Years in Congress</div>
+                  {/* Slider Toggle Switch (Basic vs Smart+ AI) */}
+                  <div className="bg-neutral-100 p-0.5 rounded-full flex items-center border border-neutral-300 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setSearchMode('classic')}
+                      className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-semibold transition-all ${
+                        searchMode === 'classic'
+                          ? 'bg-white text-neutral-900 shadow-xs'
+                          : 'text-neutral-500 hover:text-neutral-800'
+                      }`}
+                    >
+                      <SearchIcon className="w-3 h-3 text-neutral-600" />
+                      Basic
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSearchMode('smart_plus')}
+                      className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-semibold transition-all ${
+                        searchMode === 'smart_plus'
+                          ? 'bg-blue-600 text-white shadow-xs'
+                          : 'text-neutral-500 hover:text-neutral-800'
+                      }`}
+                    >
+                      <SparklesIcon className="w-3 h-3 text-white" />
+                      Smart+ AI
+                    </button>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
-        {/* OpenSecrets Style High-Density Research Dossier Table */}
-        <section className="max-w-6xl mx-auto px-6 pb-16">
-          <div className="bg-white border border-neutral-200 rounded-lg shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-neutral-200 flex flex-wrap items-center justify-between gap-4 bg-[#f8fafc]">
-              <div>
-                <h2 className="text-lg font-bold text-neutral-900">Official 118th Congress Legislation</h2>
-                <p className="text-xs text-neutral-500">Live statutory records synchronized from Congress.gov and Cloudflare D1.</p>
+                  <button type="submit" className="bg-[#1e40af] hover:bg-blue-700 text-white px-5 py-2 rounded font-bold text-sm transition-colors shrink-0">
+                    Search
+                  </button>
+                </form>
+
+                {/* Search Category Pills */}
+                <div className="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs text-neutral-300">
+                  <span className="font-semibold text-neutral-400">Trending Legislation:</span>
+                  <button onClick={() => { setSearchQuery('NDAA FY2025'); }} className="hover:text-white bg-neutral-800/80 px-2.5 py-1 rounded border border-neutral-700">#NDAA FY2025 (H.R. 8070)</button>
+                  <button onClick={() => { setSearchQuery('Consolidated Appropriations'); }} className="hover:text-white bg-neutral-800/80 px-2.5 py-1 rounded border border-neutral-700">#Appropriations Package (P.L. 118-47)</button>
+                  <button onClick={() => { setSearchQuery('Foreign Adversary App Act'); }} className="hover:text-white bg-neutral-800/80 px-2.5 py-1 rounded border border-neutral-700">#Foreign Adversary Apps (P.L. 118-50)</button>
+                  <button onClick={() => { setSearchQuery('Critical Minerals'); }} className="hover:text-white bg-neutral-800/80 px-2.5 py-1 rounded border border-neutral-700">#Critical Minerals Supply Chain</button>
+                </div>
               </div>
-              <button
-                onClick={() => setIsChatOpen(true)}
-                className="bg-[#0a192f] hover:bg-neutral-800 text-white px-3.5 py-1.5 rounded text-xs font-semibold flex items-center gap-2 transition-colors"
-              >
-                <span>✨ Ask AI Assistant</span>
-              </button>
-            </div>
+            </section>
 
-            {/* Data Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-[#f1f5f9] text-neutral-700 font-bold uppercase tracking-wider border-b border-neutral-200">
-                  <tr>
-                    <th className="py-3 px-4">Bill Number</th>
-                    <th className="py-3 px-4">Official Title</th>
-                    <th className="py-3 px-4">Chamber</th>
-                    <th className="py-3 px-4">Introduced</th>
-                    <th className="py-3 px-4">Official Status</th>
-                    <th className="py-3 px-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-neutral-200">
-                  {displayedBills.map((b) => (
-                    <tr key={b.id} className="hover:bg-neutral-50 transition-colors">
-                      <td className="py-3.5 px-4 font-mono font-bold text-blue-700">
-                        {b.bill_type ? b.bill_type.toUpperCase() : 'H.R.'} {b.bill_number}
-                      </td>
-                      <td className="py-3.5 px-4 max-w-md">
-                        <div className="font-semibold text-neutral-900 leading-snug">{b.title}</div>
-                        {b.short_title && (
-                          <div className="text-neutral-500 text-[11px] mt-0.5">Short title: {b.short_title}</div>
-                        )}
-                      </td>
-                      <td className="py-3.5 px-4 uppercase font-medium text-neutral-700">
-                        {b.bill_type?.startsWith('s') ? 'Senate' : 'House'}
-                      </td>
-                      <td className="py-3.5 px-4 text-neutral-600 font-mono">{b.introduced_date}</td>
-                      <td className="py-3.5 px-4">
-                        <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                          {b.status}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4 text-right">
-                        <button 
-                          onClick={() => {
-                            setIsChatOpen(true);
-                            setChatMessages([{ role: 'user', text: `Tell me about ${b.title} and its funding impact.` }]);
-                            runAiChat(`Tell me about ${b.title} and its funding impact.`);
-                          }}
-                          className="bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-semibold px-2.5 py-1 rounded text-xs transition-colors"
-                        >
-                          Analyze ↗
-                        </button>
-                      </td>
-                    </tr>
+            {/* OpenSecrets Style Executive Stat Blocks */}
+            <section className="max-w-6xl mx-auto px-6 -mt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-white p-5 rounded-lg border border-neutral-200 shadow-sm border-t-4 border-t-blue-600">
+                  <div className="text-xs uppercase font-bold text-neutral-500">118th Congress Appropriations</div>
+                  <div className="text-2xl font-black text-neutral-900 mt-1 tabular-nums">$851.6B</div>
+                  <div className="text-xs text-emerald-600 font-semibold mt-1">Enacted FY2024 Package</div>
+                </div>
+                <div className="bg-white p-5 rounded-lg border border-neutral-200 shadow-sm border-t-4 border-t-amber-500">
+                  <div className="text-xs uppercase font-bold text-neutral-500">Active SAM.gov Solicitations</div>
+                  <div className="text-2xl font-black text-neutral-900 mt-1 tabular-nums">4,280 Bids</div>
+                  <div className="text-xs text-neutral-600 font-medium mt-1">Matched to Statutory Mandates</div>
+                </div>
+                <div className="bg-white p-5 rounded-lg border border-neutral-200 shadow-sm border-t-4 border-t-emerald-600">
+                  <div className="text-xs uppercase font-bold text-neutral-500">Disclosed Congressional Trades</div>
+                  <div className="text-2xl font-black text-neutral-900 mt-1 tabular-nums">682 Filings</div>
+                  <div className="text-xs text-neutral-600 font-medium mt-1">Pelosi, McCaul, Tuberville</div>
+                </div>
+                <div className="bg-white p-5 rounded-lg border border-neutral-200 shadow-sm border-t-4 border-t-purple-600">
+                  <div className="text-xs uppercase font-bold text-neutral-500">Verified Members in Database</div>
+                  <div className="text-2xl font-black text-neutral-900 mt-1 tabular-nums">539 Lawmakers</div>
+                  <div className="text-xs text-neutral-600 font-medium mt-1">100 Senators • 439 Reps</div>
+                </div>
+              </div>
+            </section>
+
+            {/* Bi-Directional Parallax Rails (Real 539 Sitting Lawmakers with Cloudflare R2 AVIF Portraits) */}
+            <section className="my-12 overflow-hidden bg-neutral-900 py-6 border-y border-neutral-800">
+              <div className="max-w-6xl mx-auto px-6 mb-4 flex items-center justify-between text-white">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-300">
+                  Capitol Roll Call: 539 Sitting Lawmakers
+                </h3>
+                <span className="text-xs text-neutral-400">Continuous Opposing Partisan Parallax Rails</span>
+              </div>
+
+              {/* Row 1: Leftward Parallax (Democrats) */}
+              <div className="overflow-hidden py-1">
+                <div className="animate-marquee-left flex gap-4">
+                  {(members.filter(m => m.party === 'Democrat').slice(0, 20).concat(members.filter(m => m.party === 'Democrat').slice(0, 20))).map((m, i) => (
+                    <div
+                      key={i}
+                      onClick={() => setSelectedMemberId(m.bioguide_id)}
+                      className="cursor-pointer hover:scale-105 transition-transform p-2.5 rounded-lg border flex items-center gap-3 shrink-0 w-64 bg-blue-950/40 border-blue-900/60 text-blue-200"
+                    >
+                      <img
+                        src={m.image_r2_path || `/watchers/congresswatch/members/${m.bioguide_id}.avif`}
+                        alt={`${m.first_name} ${m.last_name}`}
+                        className="w-10 h-10 rounded-full object-cover border-2 border-blue-500 shrink-0"
+                        onError={(e: any) => { e.target.src = `https://raw.githubusercontent.com/unitedstates/images/gh-pages/congress/225x275/${m.bioguide_id}.jpg`; }}
+                      />
+                      <div className="truncate text-xs">
+                        <div className="font-bold text-white truncate">{m.first_name} {m.last_name}</div>
+                        <div className="text-neutral-400">{m.state} {m.district ? `-${m.district}` : ''} • {m.chamber === 'senate' ? 'Senator' : 'Representative'}</div>
+                        <div className="text-blue-300 font-medium text-[11px]">{m.total_terms_years} Years in Congress</div>
+                      </div>
+                    </div>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
+                </div>
+              </div>
+
+              {/* Row 2: Rightward Parallax (Republicans) */}
+              <div className="overflow-hidden py-1 mt-2">
+                <div className="animate-marquee-right flex gap-4">
+                  {(members.filter(m => m.party === 'Republican').slice(0, 20).concat(members.filter(m => m.party === 'Republican').slice(0, 20))).map((m, i) => (
+                    <div
+                      key={i}
+                      onClick={() => setSelectedMemberId(m.bioguide_id)}
+                      className="cursor-pointer hover:scale-105 transition-transform p-2.5 rounded-lg border flex items-center gap-3 shrink-0 w-64 bg-red-950/40 border-red-900/60 text-red-200"
+                    >
+                      <img
+                        src={m.image_r2_path || `/watchers/congresswatch/members/${m.bioguide_id}.avif`}
+                        alt={`${m.first_name} ${m.last_name}`}
+                        className="w-10 h-10 rounded-full object-cover border-2 border-red-500 shrink-0"
+                        onError={(e: any) => { e.target.src = `https://raw.githubusercontent.com/unitedstates/images/gh-pages/congress/225x275/${m.bioguide_id}.jpg`; }}
+                      />
+                      <div className="truncate text-xs">
+                        <div className="font-bold text-white truncate">{m.first_name} {m.last_name}</div>
+                        <div className="text-neutral-400">{m.state} {m.district ? `-${m.district}` : ''} • {m.chamber === 'senate' ? 'Senator' : 'Representative'}</div>
+                        <div className="text-red-300 font-medium text-[11px]">{m.total_terms_years} Years in Congress</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* High-Density Research Dossier Table */}
+            <section className="max-w-6xl mx-auto px-6 pb-16">
+              <div className="bg-white border border-neutral-200 rounded-lg shadow-sm overflow-hidden">
+                <div className="px-6 py-4 border-b border-neutral-200 flex flex-wrap items-center justify-between gap-4 bg-[#f8fafc]">
+                  <div>
+                    <h2 className="text-lg font-bold text-neutral-900">Official 118th Congress Legislation</h2>
+                    <p className="text-xs text-neutral-500">Live statutory records synchronized from Congress.gov and Cloudflare D1.</p>
+                  </div>
+                  <button
+                    onClick={() => setIsChatOpen(true)}
+                    className="bg-[#0a192f] hover:bg-neutral-800 text-white px-3.5 py-1.5 rounded text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                  >
+                    <SparklesIcon className="w-3.5 h-3.5 text-blue-400" />
+                    <span>Ask AI Assistant</span>
+                  </button>
+                </div>
+
+                {/* Data Table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-[#f1f5f9] text-neutral-700 font-bold uppercase tracking-wider border-b border-neutral-200">
+                      <tr>
+                        <th className="py-3 px-4">Bill Number</th>
+                        <th className="py-3 px-4">Official Title</th>
+                        <th className="py-3 px-4">Chamber</th>
+                        <th className="py-3 px-4">Introduced</th>
+                        <th className="py-3 px-4">Official Status</th>
+                        <th className="py-3 px-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-200">
+                      {displayedBills.map((b) => (
+                        <tr key={b.id} className="hover:bg-neutral-50 transition-colors">
+                          <td className="py-3.5 px-4 font-mono font-bold text-blue-700">
+                            {b.bill_type ? b.bill_type.toUpperCase() : 'H.R.'} {b.bill_number}
+                          </td>
+                          <td className="py-3.5 px-4 max-w-md">
+                            <div className="font-semibold text-neutral-900 leading-snug">{b.title}</div>
+                            {b.short_title && (
+                              <div className="text-neutral-500 text-[11px] mt-0.5">Short title: {b.short_title}</div>
+                            )}
+                          </td>
+                          <td className="py-3.5 px-4 uppercase font-medium text-neutral-700">
+                            {b.bill_type?.startsWith('s') ? 'Senate' : 'House'}
+                          </td>
+                          <td className="py-3.5 px-4 text-neutral-600 font-mono">{b.introduced_date}</td>
+                          <td className="py-3.5 px-4">
+                            <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                              {b.status}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4 text-right">
+                            <button 
+                              onClick={() => {
+                                setIsChatOpen(true);
+                                setChatMessages([{ role: 'user', text: `Tell me about ${b.title} and its funding impact.` }]);
+                                runAiChat(`Tell me about ${b.title} and its funding impact.`);
+                              }}
+                              className="bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-semibold px-2.5 py-1 rounded text-xs transition-colors inline-flex items-center gap-1"
+                            >
+                              Analyze
+                              <ExternalLinkIcon className="w-3 h-3 text-neutral-500" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+          </>
+        )}
       </main>
 
-      {/* Floating Smart+ AI Chat Drawer (Slides in ONLY when user clicks or starts chat!) */}
+      {/* Floating Smart+ AI Chat Drawer */}
       {isChatOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-xs transition-opacity animate-fade-in">
           <div className="w-full max-w-xl h-full bg-neutral-950 text-white flex flex-col shadow-2xl border-l border-neutral-800">
@@ -355,13 +400,17 @@ export default function App() {
             <div className="p-4 border-b border-neutral-800 flex items-center justify-between bg-black">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span>
-                <span className="font-bold text-sm">CongressWatch AI Assistant</span>
+                <span className="font-bold text-sm flex items-center gap-1.5">
+                  <SparklesIcon className="w-4 h-4 text-blue-400" />
+                  CongressWatch Smart+ AI
+                </span>
               </div>
               <button
                 onClick={() => setIsChatOpen(false)}
-                className="text-neutral-400 hover:text-white p-1 text-sm font-semibold"
+                className="text-neutral-400 hover:text-white p-1 text-sm font-semibold flex items-center gap-1"
               >
-                ✕ Close
+                <CloseIcon className="w-4 h-4" />
+                Close
               </button>
             </div>
 
@@ -369,7 +418,7 @@ export default function App() {
             <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs">
               {chatMessages.length === 0 ? (
                 <div className="text-center py-12 text-neutral-500 space-y-2">
-                  <div className="text-3xl">🏛️</div>
+                  <CapitolIcon className="w-10 h-10 mx-auto text-neutral-600 mb-2" />
                   <div className="font-semibold text-neutral-300 text-sm">What would you like to investigate?</div>
                   <p className="max-w-xs mx-auto text-neutral-400 text-xs">
                     Ask questions across 118th Congress bills, member insider stock trades, or SAM.gov procurement bids.
@@ -384,7 +433,7 @@ export default function App() {
                         ? 'bg-blue-600 text-white'
                         : 'bg-neutral-900 border border-neutral-800 text-neutral-200'
                     }`}>
-                      {m.text || (isAiLoading && idx === chatMessages.length - 1 ? 'Analyzing congressional records...' : '')}
+                      {m.text || (isAiLoading && idx === chatMessages.length - 1 ? 'Analyzing verified congressional records...' : '')}
                     </div>
                   </div>
                 ))
@@ -403,8 +452,9 @@ export default function App() {
               <button
                 type="submit"
                 disabled={isAiLoading}
-                className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold px-4 py-2 rounded text-xs transition-colors"
+                className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold px-4 py-2 rounded text-xs transition-colors flex items-center gap-1"
               >
+                <SendIcon className="w-3.5 h-3.5" />
                 Send
               </button>
             </form>
@@ -430,7 +480,7 @@ export default function App() {
           </div>
           <div className="flex flex-wrap gap-4 text-neutral-300">
             <a href="/api-docs" className="hover:text-white">Developer API</a>
-            <a href="/procurement" className="hover:text-white">SAM.gov Connect</a>
+            <a href="/procurement" className="hover:text-white">Contracts</a>
             <a href="/fantasy" className="hover:text-white">Fantasy Congress</a>
             <a href="https://discord.gg/vXkPvAkuvN" className="hover:text-blue-400">Discord Community</a>
             <a href="https://buymeacoffee.com/postdated" className="hover:text-amber-400">Donate</a>
