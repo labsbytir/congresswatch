@@ -16,7 +16,7 @@ export const StickyHeader: React.FC<HeaderProps> = ({
   return (
     <header className="sticky top-0 z-50 w-full bg-black border-b border-neutral-800 text-white font-satoshi shadow-md">
       {/* Top Micro-Bar (OpenSecrets Utility Ticker Style) */}
-      <div className="border-b border-neutral-800/80 px-4 py-1 text-xs text-neutral-400 flex items-center justify-between max-w-7xl mx-auto">
+      <div className="border-b border-neutral-800/80 px-4 py-1.5 text-xs text-neutral-400 flex items-center justify-between max-w-7xl mx-auto">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1.5 font-medium text-emerald-400">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -24,7 +24,7 @@ export const StickyHeader: React.FC<HeaderProps> = ({
           </span>
           <span className="hidden md:inline">118th Congress, 2nd Session</span>
           <span className="hidden lg:inline text-neutral-500">•</span>
-          <span className="hidden lg:inline">Today's Floor Votes: House (2), Senate (1)</span>
+          <span className="hidden lg:inline">Floor Votes Today: House (2), Senate (1)</span>
         </div>
         <div className="flex items-center gap-3">
           <a href="/insider-trades" className="hover:text-white transition-colors">Congressional Trades</a>
@@ -44,7 +44,8 @@ export const StickyHeader: React.FC<HeaderProps> = ({
           <img 
             src="/brand/logo.svg" 
             alt="Congress Watch Logo" 
-            className="h-10 w-auto object-contain transition-transform group-hover:scale-105"
+            style={{ height: '36px', width: 'auto', maxHeight: '36px' }}
+            className="object-contain transition-transform group-hover:scale-105"
           />
         </a>
 
