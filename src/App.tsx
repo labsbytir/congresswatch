@@ -563,12 +563,17 @@ export default function App() {
               Non-partisan civic intelligence synthesizing Congress.gov, SAM.gov, Senate eFD, and the Federal Register on the edge.
             </p>
           </div>
-          <div className="flex flex-wrap gap-5 font-bold text-sm text-neutral-300">
-            <a href="/api-docs" className="hover:text-white">Developer API</a>
-            <a href="/procurement" className="hover:text-white">Contracts</a>
-            <a href="/fantasy" className="hover:text-white">Fantasy Congress</a>
-            <a href="https://discord.gg/vXkPvAkuvN" className="hover:text-blue-400">Discord Community</a>
-            <a href="https://buymeacoffee.com/postdated" className="hover:text-amber-400">Donate</a>
+          <div className="flex flex-wrap items-center gap-6 font-bold text-sm text-neutral-200">
+            <a href="/api-docs" className="hover:text-white transition-colors">Developer API</a>
+            <a href="/procurement" className="hover:text-white transition-colors">Contracts</a>
+            <a href="/fantasy" className="hover:text-white transition-colors">Fantasy Congress</a>
+            <a href="https://discord.gg/vXkPvAkuvN" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-white hover:text-blue-300 transition-colors" title="Join CongressWatch Discord">
+              <DiscordIcon className="w-5 h-5 text-white" />
+              <span>Discord</span>
+            </a>
+            <a href="https://buymeacoffee.com/postdated" target="_blank" rel="noopener noreferrer" className="hover:opacity-90 transition-opacity shrink-0" title="Donate via Buy Me a Coffee">
+              <img src="/brand/bmac-button.png" alt="Buy Me A Coffee" style={{ height: "36px", width: "auto" }} className="rounded-lg shadow-sm" />
+            </a>
           </div>
         </div>
       </footer>

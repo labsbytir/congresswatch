@@ -1,3 +1,4 @@
+import { DiscordIcon } from "./Icons";
 import { AiBadge } from './AiBadge';
 import React from 'react';
 
@@ -34,7 +35,14 @@ export const StickyHeader: React.FC<HeaderProps> = ({
           <span className="text-neutral-600">•</span>
           <a href="/fantasy" className="hover:text-amber-400 transition-colors">Fantasy Congress</a>
           <span className="text-neutral-600">•</span>
-          <a href="/api-docs" className="hover:text-blue-400 transition-colors">Developer API</a>
+          <a href="https://discord.gg/vXkPvAkuvN" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-white hover:text-blue-300 transition-colors" title="Discord Community">
+            <DiscordIcon className="w-4 h-4 text-white" />
+            <span>Discord</span>
+          </a>
+          <span className="text-neutral-600">•</span>
+          <a href="https://buymeacoffee.com/postdated" target="_blank" rel="noopener noreferrer" className="hover:text-amber-300 text-amber-400 font-bold transition-colors">
+            Donate
+          </a>
         </div>
       </div>
 
