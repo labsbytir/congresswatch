@@ -1,0 +1,17 @@
+[extend]
+useDefault = true
+
+[whitelist]
+description = "Global allowlist for documentation examples and template variables"
+paths = [
+  "^\.dev\.vars\.example$",
+  "^docs/API_SPECIFICATION\.md$",
+  "^migrations/"
+]
+regexes = [
+  "cw_live_.*32_random_bytes",
+  "your_.*_key_here",
+  "sk_live_\.\.\.",
+  "client_\.\.\."
+]
+
