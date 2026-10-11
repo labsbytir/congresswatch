@@ -1,3 +1,4 @@
+import { BillDetail } from './components/BillDetail';
 import { LawmakerAvatar } from './components/LawmakerAvatar';
 import React, { useState, useEffect } from 'react';
 import { StickyHeader } from './components/StickyHeader';
@@ -20,6 +21,7 @@ export default function App() {
   const [chatInput, setChatInput] = useState('');
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+  const [selectedBillId, setSelectedBillId] = useState<string | null>(null);
 
   // Real data state fetched from Cloudflare D1
   const [members, setMembers] = useState<any[]>([]);
@@ -153,6 +155,20 @@ export default function App() {
               setIsChatOpen(true);
               setChatMessages([{ role: 'user', text: prompt }]);
               runAiChat(prompt);
+            }}
+          />
+        ) : selectedBillId ? (
+          <BillDetail
+            billId={selectedBillId}
+            onBack={() => setSelectedBillId(null)}
+            onAskAi={(prompt) => {
+              setIsChatOpen(true);
+              setChatMessages([{ role: 'user', text: prompt }]);
+              runAiChat(prompt);
+            }}
+            onSelectMember={(bioguide) => {
+              setSelectedBillId(null);
+              setSelectedMemberId(bioguide);
             }}
           />
         ) : (
