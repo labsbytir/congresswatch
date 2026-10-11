@@ -112,24 +112,24 @@ export const MemberProfile: React.FC<MemberProfileProps> = ({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-neutral-100 text-xs">
             <div className="p-2.5 bg-neutral-50 rounded border border-neutral-100">
               <span className="text-neutral-500 font-medium">Chamber</span>
-              <div className="text-sm font-bold text-neutral-900 capitalize">{m.chamber}</div>
+              <div className="text-base font-bold text-neutral-900 capitalize">{m.chamber}</div>
             </div>
             <div className="p-2.5 bg-neutral-50 rounded border border-neutral-100">
               <span className="text-neutral-500 font-medium">Est. Net Worth</span>
-              <div className="text-sm font-bold text-neutral-900">{m.net_worth_estimate ? `$${m.net_worth_estimate}` : 'Disclosed'}</div>
+              <div className="text-base font-bold text-neutral-900">{m.net_worth_estimate ? `$${m.net_worth_estimate}` : 'Disclosed'}</div>
             </div>
             <div className="p-2.5 bg-neutral-50 rounded border border-neutral-100">
               <span className="text-neutral-500 font-medium">Total Terms</span>
-              <div className="text-sm font-bold text-neutral-900">{Math.max(1, Math.floor(m.total_terms_years / 2))} Terms</div>
+              <div className="text-base font-bold text-neutral-900">{Math.max(1, Math.floor(m.total_terms_years / 2))} Terms</div>
             </div>
             <div className="p-2.5 bg-neutral-50 rounded border border-neutral-100">
               <span className="text-neutral-500 font-medium">Birth Date</span>
-              <div className="text-sm font-bold text-neutral-900 font-mono">{m.birth_date || 'N/A'}</div>
+              <div className="text-base font-bold text-neutral-900 font-mono">{m.birth_date || 'N/A'}</div>
             </div>
           </div>
 
           {/* Official Contact Info */}
-          <div className="pt-2 border-t border-neutral-100 text-xs text-neutral-600 space-y-1">
+          <div className="pt-2 border-t border-neutral-100 text-sm text-neutral-700 space-y-1.5 leading-relaxed">
             {m.office_address && <div><strong className="text-neutral-800">Washington Office:</strong> {m.office_address}</div>}
             {m.phone && <div><strong className="text-neutral-800">Phone:</strong> {m.phone}</div>}
             {m.social_media && (

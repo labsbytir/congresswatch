@@ -255,7 +255,7 @@ export const BillDetail: React.FC<BillDetailProps> = ({
             <h2 className="text-sm font-bold uppercase tracking-wider text-neutral-800 mb-3">
               Official Legislative Summary
             </h2>
-            <div className="text-xs text-neutral-700 leading-relaxed space-y-3">
+            <div className="text-sm text-neutral-800 leading-relaxed space-y-3">
               <p>
                 This legislation authorizes appropriations for fiscal year 2025 for military activities of the Department of Defense, for military construction, and for defense activities of the Department of Energy, to prescribe military personnel strengths for such fiscal year, and for other purposes.
               </p>
@@ -278,8 +278,8 @@ export const BillDetail: React.FC<BillDetailProps> = ({
               <div key={idx} className="relative">
                 <div className="absolute -left-[31px] top-0 w-3.5 h-3.5 rounded-full bg-blue-600 border-2 border-white"></div>
                 <div className="font-mono text-[11px] text-blue-600 font-bold">{event.date}</div>
-                <div className="text-sm font-bold text-neutral-900 mt-0.5">{event.title}</div>
-                <div className="text-xs text-neutral-500 mt-1">{event.desc}</div>
+                <div className="text-base font-bold text-neutral-900 mt-0.5">{event.title}</div>
+                <div className="text-sm text-neutral-600 mt-1">{event.desc}</div>
               </div>
             ))}
           </div>

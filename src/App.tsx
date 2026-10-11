@@ -176,14 +176,14 @@ export default function App() {
             {/* OpenSecrets Style Hero & Unified Search Header */}
             <section className="bg-[#0a192f] text-white py-14 px-6 border-b-4 border-blue-600 shadow-md">
               <div className="max-w-5xl mx-auto text-center space-y-4">
-                <span className="text-xs uppercase font-bold tracking-widest text-blue-400 bg-blue-950/70 px-3.5 py-1.5 rounded-full border border-blue-800/80 inline-flex items-center gap-1.5">
+                <span className="text-xs uppercase font-bold tracking-widest text-blue-400 bg-blue-950/70 px-4 py-2 rounded-full border border-blue-800/80 inline-flex items-center gap-2 text-sm font-bold">
                   <CapitolIcon className="w-3.5 h-3.5 text-blue-400" />
                   Investigative Legislative & Procurement Intelligence
                 </span>
                 <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">
                   Tracking Federal Power, Policy & Contracts
                 </h1>
-                <p className="text-neutral-300 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+                <p className="text-neutral-200 max-w-3xl mx-auto text-base md:text-lg leading-relaxed">
                   Connect 118th Congress legislation directly to corporate lobbying disclosures, insider stock transactions, and active SAM.gov procurement contracts.
                 </p>
 
@@ -201,7 +201,7 @@ export default function App() {
                         ? "Ask Smart+ AI: 'Which Armed Services members bought defense stocks before NDAA?'"
                         : "Search 539 Lawmakers, Bills (H.R. 8070), Tickers (NVDA), or Solicitations..."
                     }
-                    className="flex-1 py-2 px-2 text-neutral-900 text-sm focus:outline-none font-medium"
+                    className="flex-1 py-3 px-3 text-neutral-900 text-base focus:outline-none font-medium"
                   />
 
                   {/* Slider Toggle Switch (Basic vs Smart+ AI) */}
@@ -232,7 +232,7 @@ export default function App() {
                     </button>
                   </div>
 
-                  <button type="submit" className="bg-[#1e40af] hover:bg-blue-700 text-white px-5 py-2 rounded font-bold text-sm transition-colors shrink-0">
+                  <button type="submit" className="bg-[#1e40af] hover:bg-blue-700 text-white px-6 py-2.5 rounded font-black text-base transition-colors shrink-0">
                     Search
                   </button>
                 </form>
@@ -252,24 +252,24 @@ export default function App() {
             <section className="max-w-6xl mx-auto px-6 -mt-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-white p-5 rounded-lg border border-neutral-200 shadow-sm border-t-4 border-t-blue-600">
-                  <div className="text-xs uppercase font-bold text-neutral-500">118th Congress Appropriations</div>
-                  <div className="text-2xl font-black text-neutral-900 mt-1 tabular-nums">$851.6B</div>
-                  <div className="text-xs text-emerald-600 font-semibold mt-1">Enacted FY2024 Package</div>
+                  <div className="text-xs uppercase font-black tracking-wider text-neutral-600">118th Congress Appropriations</div>
+                  <div className="text-3xl font-black text-neutral-900 mt-1.5 tabular-nums">$851.6B</div>
+                  <div className="text-sm text-emerald-700 font-bold mt-1.5">Enacted FY2024 Package</div>
                 </div>
                 <div className="bg-white p-5 rounded-lg border border-neutral-200 shadow-sm border-t-4 border-t-amber-500">
-                  <div className="text-xs uppercase font-bold text-neutral-500">Active SAM.gov Solicitations</div>
-                  <div className="text-2xl font-black text-neutral-900 mt-1 tabular-nums">4,280 Bids</div>
-                  <div className="text-xs text-neutral-600 font-medium mt-1">Matched to Statutory Mandates</div>
+                  <div className="text-xs uppercase font-black tracking-wider text-neutral-600">Active SAM.gov Solicitations</div>
+                  <div className="text-3xl font-black text-neutral-900 mt-1.5 tabular-nums">4,280 Bids</div>
+                  <div className="text-sm text-neutral-600 font-semibold mt-1.5">Matched to Statutory Mandates</div>
                 </div>
                 <div className="bg-white p-5 rounded-lg border border-neutral-200 shadow-sm border-t-4 border-t-emerald-600">
-                  <div className="text-xs uppercase font-bold text-neutral-500">Disclosed Congressional Trades</div>
-                  <div className="text-2xl font-black text-neutral-900 mt-1 tabular-nums">682 Filings</div>
-                  <div className="text-xs text-neutral-600 font-medium mt-1">Pelosi, McCaul, Tuberville</div>
+                  <div className="text-xs uppercase font-black tracking-wider text-neutral-600">Disclosed Congressional Trades</div>
+                  <div className="text-3xl font-black text-neutral-900 mt-1.5 tabular-nums">682 Filings</div>
+                  <div className="text-sm text-neutral-600 font-semibold mt-1.5">Pelosi, McCaul, Tuberville</div>
                 </div>
                 <div className="bg-white p-5 rounded-lg border border-neutral-200 shadow-sm border-t-4 border-t-purple-600">
-                  <div className="text-xs uppercase font-bold text-neutral-500">Verified Members in Database</div>
-                  <div className="text-2xl font-black text-neutral-900 mt-1 tabular-nums">539 Lawmakers</div>
-                  <div className="text-xs text-neutral-600 font-medium mt-1">100 Senators • 439 Reps</div>
+                  <div className="text-xs uppercase font-black tracking-wider text-neutral-600">Verified Members in Database</div>
+                  <div className="text-3xl font-black text-neutral-900 mt-1.5 tabular-nums">539 Lawmakers</div>
+                  <div className="text-sm text-neutral-600 font-semibold mt-1.5">100 Senators • 439 Reps</div>
                 </div>
               </div>
             </section>
@@ -293,10 +293,10 @@ export default function App() {
                       className="cursor-pointer hover:scale-105 transition-transform p-2.5 rounded-lg border flex items-center gap-3 shrink-0 w-64 bg-blue-950/40 border-blue-900/60 text-blue-200"
                     >
                       <LawmakerAvatar bioguideId={m.bioguide_id} name={`${m.first_name} ${m.last_name}`} party={m.party} className="w-10 h-10 rounded-full object-cover border-2 border-neutral-700 shrink-0" />
-                      <div className="truncate text-xs">
+                      <div className="truncate text-sm">
                         <div className="font-bold text-white truncate">{m.first_name} {m.last_name}</div>
                         <div className="text-neutral-400">{m.state} {m.district ? `-${m.district}` : ''} • {m.chamber === 'senate' ? 'Senator' : 'Representative'}</div>
-                        <div className="text-blue-300 font-medium text-[11px]">{m.total_terms_years} Years in Congress</div>
+                        <div className="text-blue-300 font-semibold text-xs mt-0.5">{m.total_terms_years} Years in Congress</div>
                       </div>
                     </div>
                   ))}
@@ -316,7 +316,7 @@ export default function App() {
                       <div className="truncate text-xs">
                         <div className="font-bold text-white truncate">{m.first_name} {m.last_name}</div>
                         <div className="text-neutral-400">{m.state} {m.district ? `-${m.district}` : ''} • {m.chamber === 'senate' ? 'Senator' : 'Representative'}</div>
-                        <div className="text-red-300 font-medium text-[11px]">{m.total_terms_years} Years in Congress</div>
+                        <div className="text-red-300 font-semibold text-xs mt-0.5">{m.total_terms_years} Years in Congress</div>
                       </div>
                     </div>
                   ))}
@@ -343,7 +343,7 @@ export default function App() {
 
                 {/* Data Table */}
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
+                  <table className="w-full text-left text-sm">
                     <thead className="bg-[#f1f5f9] text-neutral-700 font-bold uppercase tracking-wider border-b border-neutral-200">
                       <tr>
                         <th className="py-3 px-4">Bill Number</th>
@@ -365,7 +365,7 @@ export default function App() {
                             <button
                               type="button"
                               onClick={(e) => { e.stopPropagation(); setSelectedBillId(b.id); }}
-                              className="text-blue-700 hover:text-blue-900 hover:underline text-left cursor-pointer"
+                              className="text-blue-700 hover:text-blue-900 hover:underline text-left cursor-pointer text-base font-mono font-bold"
                             >
                               {b.bill_type ? b.bill_type.toUpperCase() : "H.R."} {b.bill_number}
                             </button>
@@ -374,20 +374,20 @@ export default function App() {
                             <button
                               type="button"
                               onClick={(e) => { e.stopPropagation(); setSelectedBillId(b.id); }}
-                              className="font-bold text-neutral-900 group-hover:text-blue-700 hover:underline text-left leading-snug cursor-pointer block"
+                              className="font-bold text-neutral-900 group-hover:text-blue-700 hover:underline text-left text-base leading-snug cursor-pointer block"
                             >
                               {b.title}
                             </button>
                             {b.short_title && (
-                              <div className="text-neutral-500 text-[11px] mt-0.5">Short title: {b.short_title}</div>
+                              <div className="text-neutral-600 text-xs font-medium mt-1">Short title: {b.short_title}</div>
                             )}
                           </td>
                           <td className="py-3.5 px-4 uppercase font-medium text-neutral-700">
                             {b.bill_type?.startsWith("s") ? "Senate" : "House"}
                           </td>
-                          <td className="py-3.5 px-4 text-neutral-600 font-mono whitespace-nowrap">{b.introduced_date}</td>
+                          <td className="py-3.5 px-4 text-neutral-700 font-mono text-sm whitespace-nowrap">{b.introduced_date}</td>
                           <td className="py-3.5 px-4 whitespace-nowrap">
-                            <span className="inline-block whitespace-nowrap px-2.5 py-1 rounded-md text-[11px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-2xs">
+                            <span className="inline-block whitespace-nowrap px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 shadow-2xs px-3 py-1.5">
                               {b.status}
                             </span>
                           </td>
@@ -398,7 +398,7 @@ export default function App() {
                                 e.stopPropagation();
                                 setSelectedBillId(b.id);
                               }}
-                              className="bg-neutral-100 group-hover:bg-blue-600 group-hover:text-white text-neutral-800 font-semibold px-2.5 py-1 rounded text-xs transition-colors inline-flex items-center gap-1 cursor-pointer"
+                              className="bg-neutral-100 group-hover:bg-blue-600 group-hover:text-white text-neutral-800 font-semibold px-3 py-1.5 rounded-md text-xs font-bold transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-xs"
                             >
                               View Dossier
                               <ExternalLinkIcon className="w-3 h-3 opacity-70" />
