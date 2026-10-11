@@ -26,6 +26,7 @@ export default function App() {
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [selectedBillId, setSelectedBillId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'bills' | 'members' | 'committees' | 'contracts' | 'map'>('bills');
 
   // Real data state fetched from Cloudflare D1
   const [members, setMembers] = useState<any[]>([]);
@@ -167,8 +168,36 @@ export default function App() {
       {/* Sticky Black Header with Glass Separation Border */}
       <StickyHeader
         searchMode={searchMode}
+        activeTab={activeTab}
+        onSelectTab={(tab) => {
+          setSelectedMemberId(null);
+          setSelectedBillId(null);
+          setActiveTab(tab);
+        }}
         onToggleSearchMode={(mode) => setSearchMode(mode)}
       />
+
+      {/* Universal Page Action Bar (Smart AI Badge + LLM Agent Export Menu) */}
+      <div className="bg-[#0d1527] border-b border-neutral-800 py-2 px-6">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+            <span className="text-xs font-black text-neutral-200 uppercase tracking-wider font-mono">
+              {activeTab.toUpperCase()} • 118TH CONGRESS CIVIC PLATFORM
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setIsChatOpen(true)} 
+              className="cursor-pointer transition-transform hover:scale-105 flex items-center"
+              title="Ask Smart AI Assistant"
+            >
+              <AiBadge size="md" label="Smart AI" active={true} />
+            </button>
+            <LlmActionMenu markdownUrl="/llms.txt" title="CongressWatch Page Content" />
+          </div>
+        </div>
+      </div>
 
       {/* Main Full-Width Content Container */}
       <main className="flex-1">
@@ -389,8 +418,6 @@ export default function App() {
                     <h2 className="text-xl font-black text-neutral-950">Official 118th Congress Legislation</h2>
                     <p className="text-sm font-medium text-neutral-600 mt-0.5">Live statutory records synchronized from Congress.gov and Cloudflare D1.</p>
                   </div>
-                  <button id="cw-action-btn" onClick={() => setIsChatOpen(true)} className="cursor-pointer transition-transform hover:scale-105 flex items-center"><AiBadge size="md" label="Smart AI" active={true} /></button>
-                  <LlmActionMenu markdownUrl="/llms.txt" title="CongressWatch Index" />
                 </div>
 
                 {/* Data Table */}

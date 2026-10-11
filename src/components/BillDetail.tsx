@@ -116,6 +116,8 @@ export const BillDetail: React.FC<BillDetailProps> = ({
           <span>Back to Legislative Directory</span>
         </button>
         <div className="flex items-center gap-3">
+          <button onClick={() => onAskAi(`Analyze legal changes, funding authorizations, and key provisions of ${b.title}`)} className="cursor-pointer transition-transform hover:scale-105 flex items-center"><AiBadge size="md" label="Smart AI" active={true} /></button>
+          <LlmActionMenu markdownUrl={`/api/bills/${billId}.md`} title={`Bill ${b.bill_type ? b.bill_type.toUpperCase() : 'H.R.'} ${b.bill_number}`} />
           <a
             href={`/api/bills/${billId}`}
             target="_blank"
@@ -124,13 +126,6 @@ export const BillDetail: React.FC<BillDetailProps> = ({
           >
             {'{ }'} Headless Bill JSON ↗
           </a>
-          <button
-            onClick={() => onAskAi(`Analyze legal changes, funding authorizations, and key provisions of ${b.title}`)}
-            className="bg-[#0a192f] hover:bg-neutral-800 text-white px-4 py-1.5 rounded font-bold text-xs transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
-          >
-            <SparklesIcon className="w-4 h-4 text-blue-400" />
-            <span>Analyze with AI</span>
-          </button>
         </div>
       </div>
 

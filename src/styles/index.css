@@ -43,8 +43,8 @@
   h2 { font-weight: 700; }
   h3 { font-weight: 700; }
 
-  /* Body text elements use medium weight (500) and strong elements use 700 */
-  p, li, span, div, td {
+  /* Body text elements default */
+  p, li, td {
     color: #0f172a;
   }
 

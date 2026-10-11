@@ -4,13 +4,15 @@ import React from 'react';
 
 export interface HeaderProps {
   activeTab?: string;
+  onSelectTab?: (tab: 'bills' | 'members' | 'committees' | 'contracts' | 'map') => void;
   onSearch?: (query: string) => void;
   onToggleSearchMode?: (mode: 'classic' | 'smart_plus') => void;
   searchMode?: 'classic' | 'smart_plus';
 }
 
 export const StickyHeader: React.FC<HeaderProps> = ({
-  activeTab = 'legislation',
+  activeTab = 'bills',
+  onSelectTab,
   onSearch,
   onToggleSearchMode,
   searchMode = 'classic'
@@ -61,36 +63,41 @@ export const StickyHeader: React.FC<HeaderProps> = ({
 
           {/* Global Navigation Links */}
           <nav className="hidden md:flex items-center gap-2 text-[15px] font-semibold">
-            <a 
-              href="/bills" 
-              className={`px-3.5 py-2 rounded-md transition-colors ${activeTab === 'legislation' ? 'text-white bg-neutral-900 font-bold' : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60'}`}
+            <button 
+              type="button"
+              onClick={() => onSelectTab ? onSelectTab('bills') : undefined}
+              className={`px-3.5 py-2 rounded-md transition-colors cursor-pointer ${activeTab === 'bills' ? 'text-white bg-neutral-900 font-bold' : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60'}`}
             >
               Bills
-            </a>
-            <a 
-              href="/congress" 
-              className={`px-3.5 py-2 rounded-md transition-colors ${activeTab === 'members' ? 'text-white bg-neutral-900 font-bold' : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60'}`}
+            </button>
+            <button 
+              type="button"
+              onClick={() => onSelectTab ? onSelectTab('members') : undefined}
+              className={`px-3.5 py-2 rounded-md transition-colors cursor-pointer ${activeTab === 'members' ? 'text-white bg-neutral-900 font-bold' : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60'}`}
             >
               Lawmakers
-            </a>
-            <a 
-              href="/committees" 
-              className={`px-3.5 py-2 rounded-md transition-colors ${activeTab === 'committees' ? 'text-white bg-neutral-900 font-bold' : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60'}`}
+            </button>
+            <button 
+              type="button"
+              onClick={() => onSelectTab ? onSelectTab('committees') : undefined}
+              className={`px-3.5 py-2 rounded-md transition-colors cursor-pointer ${activeTab === 'committees' ? 'text-white bg-neutral-900 font-bold' : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60'}`}
             >
               Committees
-            </a>
-            <a 
-              href="/procurement" 
-              className={`px-3.5 py-2 rounded-md transition-colors ${activeTab === 'procurement' ? 'text-white bg-neutral-900 font-bold' : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60'}`}
+            </button>
+            <button 
+              type="button"
+              onClick={() => onSelectTab ? onSelectTab('contracts') : undefined}
+              className={`px-3.5 py-2 rounded-md transition-colors cursor-pointer ${activeTab === 'contracts' ? 'text-white bg-neutral-900 font-bold' : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60'}`}
             >
               Contracts
-            </a>
-            <a 
-              href="/districts" 
-              className={`px-3.5 py-2 rounded-md transition-colors ${activeTab === 'districts' ? 'text-white bg-neutral-900 font-bold' : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60'}`}
+            </button>
+            <button 
+              type="button"
+              onClick={() => onSelectTab ? onSelectTab('map') : undefined}
+              className={`px-3.5 py-2 rounded-md transition-colors cursor-pointer ${activeTab === 'map' ? 'text-white bg-neutral-900 font-bold' : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60'}`}
             >
               Map
-            </a>
+            </button>
           </nav>
 
           {/* Search Mode & Actions */}

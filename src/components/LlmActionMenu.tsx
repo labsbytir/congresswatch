@@ -44,14 +44,14 @@ export const LlmActionMenu: React.FC<LlmActionMenuProps> = ({
       {/* Prominent LLM Action Trigger */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-neutral-900 hover:bg-neutral-800 text-white border-2 border-neutral-700 hover:border-neutral-500 rounded-lg px-3 py-1.5 text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+        className="bg-neutral-900 hover:bg-neutral-800 !text-white border-2 border-neutral-700 hover:border-neutral-500 rounded-lg px-3 py-1.5 text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
         title="Agentic Engine Optimization (AEO) & LLM Actions"
       >
         <span className="font-mono text-[11px] text-blue-400 font-extrabold px-1 py-0.5 rounded bg-blue-950 border border-blue-800">
           LLM
         </span>
-        <span className="font-bold">Agent Export</span>
-        <span className="text-neutral-400 text-[10px]">▼</span>
+        <span className="font-bold !text-white">Agent Export</span>
+        <span className="!text-neutral-300 text-[10px]">▼</span>
       </button>
 
       {/* Dropdown Menu */}

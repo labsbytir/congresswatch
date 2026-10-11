@@ -1,4 +1,5 @@
 import { LlmActionMenu } from "./LlmActionMenu";
+import { AiBadge } from "./AiBadge";
 import React, { useEffect, useState } from 'react';
 import { ArrowLeftIcon, SparklesIcon, ExternalLinkIcon } from './Icons';
 import { LawmakerAvatar } from './LawmakerAvatar';
@@ -67,6 +68,8 @@ export const MemberProfile: React.FC<MemberProfileProps> = ({
           <span>Back to All Lawmakers</span>
         </button>
         <div className="flex items-center gap-3">
+          <button onClick={() => onAskAi(`Analyze voting record, committees, and stock trades for ${m.first_name} ${m.last_name} (${m.party}-${m.state})`)} className="cursor-pointer transition-transform hover:scale-105 flex items-center"><AiBadge size="md" label="Smart AI" active={true} /></button>
+          <LlmActionMenu markdownUrl={`/api/members/${bioguideId}.md`} title={`${m.first_name} ${m.last_name} (${m.party}-${m.state})`} />
           <a
             href={`/api/members/${bioguideId}`}
             target="_blank"
@@ -76,13 +79,6 @@ export const MemberProfile: React.FC<MemberProfileProps> = ({
           >
             {'{ }'} Raw Headless JSON ↗
           </a>
-          <button
-            onClick={() => onAskAi(`Analyze voting record, committees, and stock trades for ${m.first_name} ${m.last_name} (${m.party}-${m.state})`)}
-            className="bg-[#0a192f] hover:bg-neutral-800 text-white px-4 py-1.5 rounded font-bold text-xs transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
-          >
-            <SparklesIcon className="w-4 h-4 text-blue-400" />
-            <span>Ask AI About This Member</span>
-          </button>
         </div>
       </div>
 
