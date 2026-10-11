@@ -1,3 +1,4 @@
+import { AiBadge } from './AiBadge';
 import React from 'react';
 
 export interface HeaderProps {
@@ -86,17 +87,7 @@ export const StickyHeader: React.FC<HeaderProps> = ({
 
           {/* Search Mode & Actions */}
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => onToggleSearchMode && onToggleSearchMode(searchMode === 'classic' ? 'smart_plus' : 'classic')}
-              className={`text-xs px-3 py-1.5 rounded-full font-bold border transition-all cursor-pointer ${
-                searchMode === 'smart_plus' 
-                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-400 shadow-sm shadow-blue-500/20' 
-                  : 'bg-neutral-900 text-neutral-300 border-neutral-700 hover:border-neutral-500'
-              }`}
-              title="Toggle between Basic search and Smart+ AI"
-            >
-              {searchMode === 'smart_plus' ? 'Smart+ AI' : 'Basic Search'}
-            </button>
+            <button onClick={() => onToggleSearchMode && onToggleSearchMode(searchMode === 'classic' ? 'smart_plus' : 'classic')} className="cursor-pointer transition-transform hover:scale-105" title="Toggle between Basic search and Smart AI"><AiBadge size="sm" label="Smart AI" active={searchMode === 'smart_plus'} /></button>
 
             <a 
               href="/auth/login" 

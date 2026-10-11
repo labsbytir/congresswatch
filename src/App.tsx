@@ -1,3 +1,4 @@
+import { AiBadge } from './components/AiBadge';
 import React, { useState, useEffect, useMemo } from 'react';
 import { StickyHeader } from './components/StickyHeader';
 import { MemberProfile } from './components/MemberProfile';
@@ -244,18 +245,7 @@ export default function App() {
                       <SearchIcon className="w-3.5 h-3.5 text-neutral-700" />
                       Basic
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => setSearchMode('smart_plus')}
-                      className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-black transition-all cursor-pointer ${
-                        searchMode === 'smart_plus'
-                          ? 'bg-blue-600 text-white shadow-sm'
-                          : 'text-neutral-500 hover:text-neutral-800'
-                      }`}
-                    >
-                      <SparklesIcon className="w-3.5 h-3.5 text-white" />
-                      Smart+ AI
-                    </button>
+                    <button type="button" onClick={() => setSearchMode('smart_plus')} className="cursor-pointer transition-transform hover:scale-105" title="Smart AI Search Mode"><AiBadge size="sm" label="AI" active={searchMode === 'smart_plus'} /></button>
                   </div>
 
                   {/* Heavy Magnifying Glass Submit Button (No text box, sleek heavy icon) */}
@@ -407,14 +397,7 @@ export default function App() {
                     <h2 className="text-xl font-black text-neutral-950">Official 118th Congress Legislation</h2>
                     <p className="text-sm font-medium text-neutral-600 mt-0.5">Live statutory records synchronized from Congress.gov and Cloudflare D1.</p>
                   </div>
-                  <button
-                    id="cw-action-btn"
-                    onClick={() => setIsChatOpen(true)}
-                    className="bg-[#0a192f] hover:bg-neutral-800 text-white px-4 py-2 rounded-lg text-sm font-extrabold flex items-center gap-2 transition-colors cursor-pointer shadow-xs"
-                  >
-                    <SparklesIcon className="w-4 h-4 text-blue-400" />
-                    <span>Ask AI Assistant</span>
-                  </button>
+                  <button id="cw-action-btn" onClick={() => setIsChatOpen(true)} className="cursor-pointer transition-transform hover:scale-105 flex items-center"><AiBadge size="md" label="Smart AI" active={true} /></button>
                 </div>
 
                 {/* Data Table */}
