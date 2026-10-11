@@ -1,3 +1,4 @@
+import { SearchModeToggle } from './components/SearchModeToggle';
 import { LlmActionMenu } from "./components/LlmActionMenu";
 import { AiBadge } from './components/AiBadge';
 import React, { useState, useEffect, useMemo } from 'react';
@@ -217,7 +218,7 @@ export default function App() {
                 <form 
                   id="cw-search-container" 
                   onSubmit={handleSearchSubmit} 
-                  className="max-w-3xl mx-auto mt-8 bg-white rounded-xl p-2 shadow-2xl flex items-center gap-3 border-2 border-neutral-300 focus-within:border-blue-600 transition-colors"
+                  className="max-w-3xl mx-auto mt-8 bg-white rounded-2xl p-2.5 shadow-2xl flex items-center gap-3 border-2 border-neutral-300 focus-within:border-blue-600 transition-colors"
                 >
                   <input
                     id="cw-search-input"
@@ -226,38 +227,27 @@ export default function App() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={
                       searchMode === 'smart_plus'
-                        ? "Ask Smart+ AI: 'Which Armed Services members bought defense stocks before NDAA?' (Press Enter)"
+                        ? "Ask Smart AI: 'Which Armed Services members bought defense stocks before NDAA?' (Press Enter)"
                         : "Search 539 Lawmakers, Bills (H.R. 8070), Tickers (NVDA), or Solicitations (Live Filtering)..."
                     }
                     className="flex-1 py-3 px-4 text-neutral-950 text-base focus:outline-none font-bold placeholder:font-medium placeholder:text-neutral-400"
                   />
 
-                  {/* Slider Toggle Switch (Basic vs Smart+ AI) */}
-                  <div id="cw-search-toggle-slider" className="bg-neutral-100 p-1 rounded-full flex items-center border border-neutral-300 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => setSearchMode('classic')}
-                      className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-black transition-all cursor-pointer ${
-                        searchMode === 'classic'
-                          ? 'bg-white text-neutral-950 shadow-sm border border-neutral-300'
-                          : 'text-neutral-500 hover:text-neutral-800'
-                      }`}
-                    >
-                      <SearchIcon className="w-3.5 h-3.5 text-neutral-700" />
-                      Basic
-                    </button>
-                    <button type="button" onClick={() => setSearchMode('smart_plus')} className="cursor-pointer transition-transform hover:scale-105" title="Smart AI Search Mode"><AiBadge size="sm" label="AI" active={searchMode === 'smart_plus'} /></button>
-                  </div>
+                  {/* Proportional Dual-Pill Slider Toggle (Basic vs AI) */}
+                  <SearchModeToggle
+                    mode={searchMode}
+                    onChange={(m) => setSearchMode(m)}
+                  />
 
-                  {/* Heavy Magnifying Glass Submit Button (No text box, sleek heavy icon) */}
+                  {/* Bold Black Magnifying Glass (No background box, proportional size) */}
                   <button 
                     id="cw-search-submit-btn" 
                     type="submit" 
-                    className="bg-[#1e40af] hover:bg-blue-700 text-white p-3.5 rounded-lg flex items-center justify-center transition-all cursor-pointer shrink-0 shadow-md hover:scale-105"
-                    title={searchMode === 'smart_plus' ? "Run Smart+ AI Search" : "Search Bills"}
+                    className="p-2.5 rounded-full hover:bg-neutral-100 text-black hover:scale-110 active:scale-95 transition-all cursor-pointer shrink-0"
+                    title={searchMode === 'smart_plus' ? "Run Smart AI Search" : "Search Bills"}
                   >
-                    <svg className="w-5 h-5 text-white" strokeWidth="2.8" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                      <circle cx="11" cy="11" r="7.5" />
+                    <svg className="w-6 h-6 text-black stroke-[3.2]" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                      <circle cx="11" cy="11" r="7" />
                       <path d="m21 21-4.3-4.3" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
