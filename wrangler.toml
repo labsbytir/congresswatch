@@ -12,7 +12,7 @@ binding = "ASSETS"
 [[d1_databases]]
 binding = "DB"
 database_name = "congresswatch-db"
-database_id = "congresswatch-db-id"
+database_id = "e73430b5-502e-474f-b9db-a3151e0d1c30"
 migrations_dir = "migrations"
 
 # Cloudflare R2 Object Storage (/watchers/congresswatch/...)
@@ -32,7 +32,7 @@ binding = "AI"
 # Cloudflare KV (API Key Cache, IP Whitelists, Fast Lookups)
 [[kv_namespaces]]
 binding = "API_CACHE_KV"
-id = "congresswatch-api-cache-id"
+id = "50d72803555b47239c093538997073dc"
 
 # Cloudflare Durable Objects (Strict Distributed Rate Limiting & Company Quota Pools)
 [[durable_objects.bindings]]
