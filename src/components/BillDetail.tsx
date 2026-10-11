@@ -237,29 +237,59 @@ export const BillDetail: React.FC<BillDetailProps> = ({
             <h2 className="text-base font-extrabold uppercase tracking-wider text-neutral-900 mb-4">
               Congressional Sponsors & Cosponsors
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {sponsors.map((s: any, idx: number) => (
-                <div
-                  key={idx}
-                  onClick={() => onSelectMember(s.bioguide_id)}
-                  className="cursor-pointer hover:border-blue-600 hover:shadow-md transition-all p-4 rounded-xl border-2 border-neutral-200 flex items-center gap-4 bg-[#f8fafc]"
-                >
-                  <LawmakerAvatar
-                    bioguideId={s.bioguide_id}
-                    name={s.name}
-                    party={s.party}
-                    className="w-16 h-18 rounded-lg object-cover border-2 border-neutral-400 shrink-0"
-                  />
-                  <div className="text-sm">
-                    <span className="text-xs font-black uppercase tracking-wider text-neutral-500 block">{s.role}</span>
-                    <div className="text-base font-extrabold text-neutral-950 mt-0.5">{s.name}</div>
-                    <div className="text-neutral-700 font-bold text-xs mt-0.5">{s.party} • {s.state}</div>
-                    <span className="text-blue-700 hover:underline text-xs font-bold mt-1 inline-block">
-                      View Full Lawmaker Dossier →
-                    </span>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {sponsors.map((s: any, idx: number) => {
+                const isDem = s.party === "Democrat";
+                const isGop = s.party === "Republican";
+                const partyBg = isDem ? "bg-blue-600 text-white" : (isGop ? "bg-red-600 text-white" : "bg-purple-600 text-white");
+                const partyBorder = isDem ? "border-blue-600" : (isGop ? "border-red-600" : "border-purple-600");
+
+                return (
+                  <div
+                    key={idx}
+                    onClick={() => onSelectMember(s.bioguide_id)}
+                    className="cursor-pointer hover:border-blue-600 hover:shadow-lg hover:-translate-y-0.5 transition-all p-6 rounded-2xl border-2 border-neutral-300 flex items-start gap-6 bg-[#f8fafc] group shadow-sm"
+                  >
+                    {/* Big Prominent Lawmaker Portrait */}
+                    <div className="shrink-0 relative">
+                      <LawmakerAvatar
+                        bioguideId={s.bioguide_id}
+                        name={s.name}
+                        party={s.party}
+                        className={"w-28 h-36 rounded-xl object-cover border-4 " + partyBorder + " shadow-md group-hover:scale-102 transition-transform"}
+                      />
+                      <span className={"absolute -bottom-2.5 left-1/2 -translate-x-1/2 text-xs font-black uppercase tracking-wider px-3 py-0.5 rounded-full shadow-xs whitespace-nowrap " + partyBg}>
+                        {s.party}
+                      </span>
+                    </div>
+
+                    {/* Prominent Lawmaker Details */}
+                    <div className="flex-1 space-y-2 pt-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-black uppercase tracking-widest text-blue-800 bg-blue-100 px-2.5 py-1 rounded border border-blue-300">
+                          {s.role}
+                        </span>
+                        <span className="text-xs font-mono font-bold text-neutral-500">
+                          {s.bioguide_id}
+                        </span>
+                      </div>
+
+                      <h3 className="text-2xl font-black text-neutral-950 group-hover:text-blue-700 transition-colors leading-tight">
+                        {s.name}
+                      </h3>
+
+                      <p className="text-base font-extrabold text-neutral-800">
+                        {s.party} • {s.state}
+                      </p>
+
+                      <div className="pt-3 border-t border-neutral-200 flex items-center justify-between text-xs font-black text-blue-700 group-hover:text-blue-900">
+                        <span>View Full Lawmaker Dossier & Stock Trades</span>
+                        <span className="text-base">→</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
