@@ -1,3 +1,4 @@
+import { BillIngestionWorkflow, SocialSyncWorkflow } from './workflows/workflows';
 import { RateLimiterDO } from './durable-objects/RateLimiterDO';
 import { handleCreateShare, handleViewShare } from './routes/share-chat';
 
@@ -18,7 +19,7 @@ export interface Env {
 }
 
 // Export the Durable Object class for Cloudflare Workers runtime
-export { RateLimiterDO };
+export { RateLimiterDO, BillIngestionWorkflow, SocialSyncWorkflow };
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -256,6 +257,12 @@ Always cite your sources with inline numbers [1], [2] corresponding to official 
 
     // 9. Static Assets Fallback (Serves React 19 SPA)
     return env.ASSETS.fetch(request);
+  },
+
+  async queue(batch: any, env: Env): Promise<void> {
+    for (const msg of batch.messages) {
+      console.log('Processing queue msg:', msg.id);
+      msg.ack();
+    }
   }
 };
-
