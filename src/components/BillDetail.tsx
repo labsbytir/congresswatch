@@ -1,5 +1,7 @@
 import { LlmActionMenu } from "./LlmActionMenu";
 import { AiBadge } from "./AiBadge";
+import { PdfJsViewer } from "./PdfJsViewer";
+import { computeMyersDiff } from "../lib/myers-diff";
 import React, { useEffect, useState } from 'react';
 import { 
   ArrowLeftIcon, 
@@ -26,6 +28,39 @@ export const BillDetail: React.FC<BillDetailProps> = ({
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'pdf' | 'timeline' | 'contracts' | 'diff'>('overview');
+  const [diffVerA, setDiffVerA] = useState<'ih' | 'rh'>('ih');
+  const [diffVerB, setDiffVerB] = useState<'eh' | 'rh'>('eh');
+
+  const versionSamples: Record<string, string> = {
+    ih: `SECTION 1. SHORT TITLE.
+This Act may be cited as the "Servicemember Quality of Life and National Defense Authorization Act for Fiscal Year 2025".
+
+SEC. 402. CRITICAL MINERAL PROCUREMENT.
+(a) STUDY REQUIRED.—The Secretary of Defense shall conduct an advisory assessment within 180 days of enactment on critical mineral vulnerabilities.
+(b) REPORT.—The Secretary shall submit a preliminary report to congressional defense committees.
+(c) VOLUNTARY BENCHMARKS.—Defense contractors are encouraged to establish domestic sourcing alternatives.`,
+
+    rh: `SECTION 1. SHORT TITLE.
+This Act may be cited as the "Servicemember Quality of Life and National Defense Authorization Act for Fiscal Year 2025".
+
+SEC. 402. CRITICAL MINERAL PROCUREMENT AND STRATEGIC STOCKPILES.
+(a) MANDATORY DOMESTIC SOURCING.—The Secretary of Defense shall enforce a mandatory domestic procurement requirement within 90 days of enactment.
+(b) SUPPLY CHAIN HARDENING.—Tier 1 and Tier 2 defense contractors must verify rare earth element provenance from trusted non-adversary sources.
+(c) ANNUAL AUDITS.—The Comptroller General shall audit compliance annually and submit findings to Congress.`,
+
+    eh: `SECTION 1. SHORT TITLE.
+This Act may be cited as the "National Defense Authorization Act for Fiscal Year 2025".
+
+SEC. 402. CRITICAL MINERAL PROCUREMENT AND STRATEGIC STOCKPILES.
+(a) MANDATORY DOMESTIC SOURCING.—The Secretary of Defense shall enforce a mandatory domestic procurement requirement within 90 days of enactment.
+(b) SUPPLY CHAIN HARDENING.—Tier 1, Tier 2, and Subcontractor defense suppliers must verify rare earth element provenance from trusted allied sources.
+(c) ANNUAL AUDITS & PENALTIES.—Non-compliant contractors shall be subject to debarment and forfeiture of performance incentives.
+(d) ENHANCED APPROPRIATIONS.—There is authorized to be appropriated $1,250,000,000 to capitalize the National Defense Stockpile Transaction Fund.`
+  };
+
+  const calculatedDiff = computeMyersDiff(versionSamples[diffVerA] || '', versionSamples[diffVerB] || '');
+  const additionsCount = calculatedDiff.filter(d => d.type === 'added').length;
+  const deletionsCount = calculatedDiff.filter(d => d.type === 'removed').length;
 
   useEffect(() => {
     setLoading(true);
@@ -309,36 +344,11 @@ export const BillDetail: React.FC<BillDetailProps> = ({
 
       {/* Tab 2: Official PDF Document */}
       {activeTab === 'pdf' && (
-        <div className="bg-white border border-neutral-300 rounded-xl p-6 shadow-sm space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-neutral-200">
-            <div>
-              <h2 className="text-base font-extrabold uppercase tracking-wider text-neutral-900">
-                Official Government PDF Text
-              </h2>
-              <p className="text-xs font-medium text-neutral-600">
-                Published by the Government Publishing Office (GPO) and Congress.gov
-              </p>
-            </div>
-            <a
-              href={officialPdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-xs"
-            >
-              <DocumentIcon className="w-4 h-4 text-white" />
-              <span>Download Official PDF ↗</span>
-            </a>
-          </div>
-
-          {/* Embedded PDF Viewer Frame */}
-          <div className="w-full h-[650px] border-2 border-neutral-200 rounded-lg overflow-hidden bg-neutral-100 flex flex-col items-center justify-center">
-            <iframe
-              src={`https://docs.google.com/viewer?url=${encodeURIComponent(officialPdfUrl)}&embedded=true`}
-              title="Official Bill PDF"
-              className="w-full h-full"
-            />
-          </div>
-        </div>
+        <PdfJsViewer
+          pdfUrl={`/watchers/congresswatch/bills/${b.congress || 118}/${b.bill_type || 'hr'}/${b.bill_number}/original.pdf`}
+          billTitle={b.title}
+          billNumber={`${b.bill_type ? b.bill_type.toUpperCase() : 'H.R.'} ${b.bill_number}`}
+        />
       )}
 
       {/* Tab 3: Timeline Milestones */}
@@ -400,30 +410,75 @@ export const BillDetail: React.FC<BillDetailProps> = ({
 
       {/* Tab 5: Redline Diff Viewer */}
       {activeTab === 'diff' && (
-        <div className="bg-white border border-neutral-300 rounded-xl p-6 shadow-sm">
-          <div className="flex items-center justify-between pb-4 border-b border-neutral-200 mb-4">
+        <div className="bg-white border border-neutral-300 rounded-xl p-6 shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-200">
             <div>
               <h2 className="text-base font-extrabold uppercase tracking-wider text-neutral-900">
-                Version Redline Comparison
+                Myers Algorithm Legislative Redline Diff
               </h2>
-              <p className="text-sm font-medium text-neutral-600">Comparing Introduced in House (IH) vs. Passed House (EH)</p>
+              <p className="text-sm font-medium text-neutral-600">
+                Line-by-line syntax comparison between statutory printings
+              </p>
             </div>
-            <span className="font-mono text-xs px-3 py-1.5 rounded bg-neutral-100 text-neutral-900 font-black border border-neutral-300">
-              +14 Additions / -6 Deletions
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-xs px-3 py-1.5 rounded-lg bg-emerald-100 text-emerald-900 font-black border border-emerald-300">
+                +{additionsCount} Additions
+              </span>
+              <span className="font-mono text-xs px-3 py-1.5 rounded-lg bg-rose-100 text-rose-900 font-black border border-rose-300">
+                -{deletionsCount} Deletions
+              </span>
+            </div>
           </div>
 
-          <div className="font-mono text-sm border-2 border-neutral-200 rounded-lg bg-[#f8fafc] p-5 space-y-3 overflow-x-auto">
-            <div className="text-neutral-500 font-bold">// Section 402 - Mandatory Critical Mineral Sourcing</div>
-            <div className="bg-rose-100 text-rose-900 px-3 py-1.5 rounded font-bold line-through">
-              - (a) The Secretary shall, within 180 days of enactment, prepare an initial advisory assessment.
+          {/* Version Switcher */}
+          <div className="flex flex-wrap items-center gap-4 bg-[#f8fafc] p-4 rounded-xl border border-neutral-200 text-xs font-bold">
+            <div className="flex items-center gap-2">
+              <span className="uppercase text-neutral-500">Base Version (A):</span>
+              <select
+                value={diffVerA}
+                onChange={(e: any) => setDiffVerA(e.target.value)}
+                className="bg-white border border-neutral-300 rounded px-2.5 py-1 text-neutral-900 font-bold"
+              >
+                <option value="ih">Introduced in House (IH)</option>
+                <option value="rh">Reported in House (RH)</option>
+              </select>
             </div>
-            <div className="bg-emerald-100 text-emerald-900 px-3 py-1.5 rounded font-bold">
-              + (a) The Secretary shall, within 90 days of enactment, enforce a mandatory domestic procurement requirement.
+            <span className="text-neutral-400 font-mono">VS</span>
+            <div className="flex items-center gap-2">
+              <span className="uppercase text-neutral-500">Target Version (B):</span>
+              <select
+                value={diffVerB}
+                onChange={(e: any) => setDiffVerB(e.target.value)}
+                className="bg-white border border-neutral-300 rounded px-2.5 py-1 text-neutral-900 font-bold"
+              >
+                <option value="eh">Engrossed in House (EH - Floor Passed)</option>
+                <option value="rh">Reported in House (RH)</option>
+              </select>
             </div>
-            <div className="text-neutral-800 font-medium px-3">
-              (b) Compliance shall be monitored across all Tier 1 and Tier 2 defense contractors.
-            </div>
+          </div>
+
+          {/* Diff Content Box */}
+          <div className="font-mono text-xs border-2 border-neutral-200 rounded-xl bg-[#0a192f] text-neutral-100 p-4 overflow-x-auto space-y-1">
+            {calculatedDiff.map((line, idx) => (
+              <div
+                key={idx}
+                className={`flex items-start gap-4 px-3 py-1 rounded ${
+                  line.type === 'added'
+                    ? 'bg-emerald-950/80 text-emerald-300 border-l-4 border-emerald-500 font-bold'
+                    : line.type === 'removed'
+                    ? 'bg-rose-950/80 text-rose-300 border-l-4 border-rose-500 line-through opacity-80'
+                    : 'text-neutral-300'
+                }`}
+              >
+                <span className="w-8 shrink-0 text-right opacity-40 select-none">
+                  {line.newLineNumber || line.oldLineNumber || ''}
+                </span>
+                <span className="w-4 shrink-0 font-black select-none">
+                  {line.type === 'added' ? '+' : (line.type === 'removed' ? '−' : ' ')}
+                </span>
+                <span className="flex-1 whitespace-pre-wrap">{line.text || ' '}</span>
+              </div>
+            ))}
           </div>
         </div>
       )}
