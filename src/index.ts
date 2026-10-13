@@ -140,7 +140,7 @@ export default {
         headers: {
           ...corsHeaders,
           'Content-Type': 'application/json',
-          'Cache-Control': 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400'
+          'Cache-Control': 'public, max-age=60, s-maxage=300'
         }
       });
     }

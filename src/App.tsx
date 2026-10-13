@@ -58,7 +58,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    fetch('/api/members')
+    fetch('/api/members?limit=600')
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) setMembers(data);
