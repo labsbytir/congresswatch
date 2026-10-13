@@ -2,6 +2,8 @@ import { LlmActionMenu } from "./LlmActionMenu";
 import { AiBadge } from "./AiBadge";
 import { PdfJsViewer } from "./PdfJsViewer";
 import { computeMyersDiff } from "../lib/myers-diff";
+import { CONGRESS_BENCHMARKS } from "../lib/constants";
+import { validatePercentage } from "../lib/validation";
 import React, { useEffect, useState } from 'react';
 import { 
   ArrowLeftIcon, 
@@ -198,11 +200,11 @@ SEC. 402. CRITICAL MINERAL PROCUREMENT AND STRATEGIC STOCKPILES.
           </div>
           <div className="p-4 bg-[#f8fafc] rounded-lg border border-neutral-200">
             <span className="text-xs uppercase font-black tracking-wider text-neutral-600 block">AI Passage Likelihood</span>
-            <div className="text-base font-extrabold text-emerald-700 font-mono mt-1">88.4% (High)</div>
+            <div className="text-base font-extrabold text-emerald-700 font-mono mt-1">{validatePercentage(b.passage_probability || CONGRESS_BENCHMARKS.AI_PREDICTIVE_ACCURACY_PCT)}% (High)</div>
           </div>
           <div className="p-4 bg-[#f8fafc] rounded-lg border border-neutral-200">
             <span className="text-xs uppercase font-black tracking-wider text-neutral-600 block">Appropriations</span>
-            <div className="text-base font-extrabold text-neutral-950 font-mono mt-1">$849.8B Authorized</div>
+            <div className="text-base font-extrabold text-neutral-950 font-mono mt-1">${b.appropriations_authorized || CONGRESS_BENCHMARKS.FY2025_NDAA_AUTHORIZED_BILLIONS}B Authorized</div>
           </div>
         </div>
       </div>

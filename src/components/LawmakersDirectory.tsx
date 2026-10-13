@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { LawmakerAvatar } from './LawmakerAvatar';
 import { SearchIcon, SparklesIcon, CapitolIcon, ExternalLinkIcon } from './Icons';
+import { validateRosterMath } from '../lib/validation';
 
 export interface LawmakersDirectoryProps {
   members: any[];
@@ -48,16 +49,8 @@ export const LawmakersDirectory: React.FC<LawmakersDirectoryProps> = ({
     return list;
   }, [members, chamberFilter, partyFilter, search, sortBy]);
 
-  const currentDems = members.filter(m => m.party === 'Democrat').length;
-  const currentGop = members.filter(m => m.party === 'Republican').length;
-  const currentSenate = members.filter(m => m.chamber === 'senate').length;
-  const currentHouse = members.filter(m => m.chamber === 'house').length;
-
-  const demsCount = members.length >= 500 ? currentDems : 262;
-  const gopCount = members.length >= 500 ? currentGop : 274;
-  const senateCount = members.length >= 500 ? currentSenate : 100;
-  const houseCount = members.length >= 500 ? currentHouse : 439;
-  const totalCount = members.length >= 500 ? members.length : 539;
+  const rosterStats = useMemo(() => validateRosterMath(members), [members]);
+  const { democrats: demsCount, republicans: gopCount, senate: senateCount, house: houseCount, total: totalCount } = rosterStats;
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10 font-satoshi text-neutral-900 space-y-10">

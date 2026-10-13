@@ -10,6 +10,8 @@ import { LawmakersDirectory } from './components/LawmakersDirectory';
 import { ContractsExplorer } from './components/ContractsExplorer';
 import { CommitteesDirectory } from './components/CommitteesDirectory';
 import { DistrictMapExplorer } from './components/DistrictMapExplorer';
+import { CONGRESS_BENCHMARKS } from './lib/constants';
+import { validateRosterMath } from './lib/validation';
 import { 
   SearchIcon, 
   SparklesIcon, 
@@ -381,23 +383,23 @@ export default function App() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div id="cw-stat-card" className="bg-white p-5 rounded-xl border-2 border-neutral-200 shadow-md border-t-4 border-t-blue-600">
                   <div className="text-xs uppercase font-black tracking-wider text-neutral-600">118th Congress Appropriations</div>
-                  <div className="text-3xl font-black text-neutral-950 mt-1.5 tabular-nums">$851.6B</div>
+                  <div className="text-3xl font-black text-neutral-950 mt-1.5 tabular-nums">${CONGRESS_BENCHMARKS.FY2024_CONSOLIDATED_APPROPRIATIONS_BILLIONS}B</div>
                   <div className="text-sm text-emerald-700 font-bold mt-1.5">Enacted FY2024 Package</div>
                 </div>
                 <div id="cw-stat-card" className="bg-white p-5 rounded-xl border-2 border-neutral-200 shadow-md border-t-4 border-t-amber-500">
                   <div className="text-xs uppercase font-black tracking-wider text-neutral-600">Active SAM.gov Solicitations</div>
-                  <div className="text-3xl font-black text-neutral-950 mt-1.5 tabular-nums">4,280 Bids</div>
+                  <div className="text-3xl font-black text-neutral-950 mt-1.5 tabular-nums">{CONGRESS_BENCHMARKS.ACTIVE_SAM_GOV_SOLICITATIONS_ESTIMATE.toLocaleString()} Bids</div>
                   <div className="text-sm text-neutral-600 font-semibold mt-1.5">Matched to Statutory Mandates</div>
                 </div>
                 <div id="cw-stat-card" className="bg-white p-5 rounded-xl border-2 border-neutral-200 shadow-md border-t-4 border-t-emerald-600">
                   <div className="text-xs uppercase font-black tracking-wider text-neutral-600">Disclosed Congressional Trades</div>
-                  <div className="text-3xl font-black text-neutral-950 mt-1.5 tabular-nums">682 Filings</div>
+                  <div className="text-3xl font-black text-neutral-950 mt-1.5 tabular-nums">{CONGRESS_BENCHMARKS.DISCLOSED_CONGRESSIONAL_TRADES_COUNT} Filings</div>
                   <div className="text-sm text-neutral-600 font-semibold mt-1.5">Pelosi, McCaul, Tuberville</div>
                 </div>
                 <div id="cw-stat-card" className="bg-white p-5 rounded-xl border-2 border-neutral-200 shadow-md border-t-4 border-t-purple-600">
                   <div className="text-xs uppercase font-black tracking-wider text-neutral-600">Verified Members in Database</div>
-                  <div className="text-3xl font-black text-neutral-950 mt-1.5 tabular-nums">539 Lawmakers</div>
-                  <div className="text-sm text-neutral-600 font-semibold mt-1.5">100 Senators • 439 Reps</div>
+                  <div className="text-3xl font-black text-neutral-950 mt-1.5 tabular-nums">{CONGRESS_BENCHMARKS.TOTAL_SITTING_MEMBERS} Lawmakers</div>
+                  <div className="text-sm text-neutral-600 font-semibold mt-1.5">{CONGRESS_BENCHMARKS.SENATE_TOTAL_SEATS} Senators • {CONGRESS_BENCHMARKS.HOUSE_TOTAL_MEMBERS} Reps</div>
                 </div>
               </div>
             </section>
@@ -406,7 +408,7 @@ export default function App() {
             <section id="cw-marquee-section" className="my-14 overflow-hidden bg-neutral-950 py-8 border-y-2 border-neutral-800">
               <div className="max-w-6xl mx-auto px-6 mb-4 flex items-center justify-between text-white">
                 <h3 className="text-sm font-black uppercase tracking-wider text-neutral-200">
-                  Capitol Roll Call: 539 Sitting Lawmakers
+                  Capitol Roll Call: {CONGRESS_BENCHMARKS.TOTAL_SITTING_MEMBERS} Sitting Lawmakers
                 </h3>
                 <span className="text-xs font-bold text-neutral-400">Continuous Opposing Partisan Parallax Rails</span>
               </div>
