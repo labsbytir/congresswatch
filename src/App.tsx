@@ -6,6 +6,10 @@ import { StickyHeader } from './components/StickyHeader';
 import { MemberProfile } from './components/MemberProfile';
 import { BillDetail } from './components/BillDetail';
 import { LawmakerAvatar } from './components/LawmakerAvatar';
+import { LawmakersDirectory } from './components/LawmakersDirectory';
+import { ContractsExplorer } from './components/ContractsExplorer';
+import { CommitteesDirectory } from './components/CommitteesDirectory';
+import { DistrictMapExplorer } from './components/DistrictMapExplorer';
 import { 
   SearchIcon, 
   SparklesIcon, 
@@ -26,11 +30,32 @@ export default function App() {
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   const [selectedBillId, setSelectedBillId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'bills' | 'members' | 'committees' | 'contracts' | 'map'>('bills');
+
+  const getTabFromPath = (): 'bills' | 'members' | 'committees' | 'contracts' | 'map' => {
+    if (typeof window === 'undefined') return 'bills';
+    const path = window.location.pathname.toLowerCase();
+    if (path.includes('congress') || path.includes('members')) return 'members';
+    if (path.includes('committee')) return 'committees';
+    if (path.includes('procurement') || path.includes('contract')) return 'contracts';
+    if (path.includes('district') || path.includes('map')) return 'map';
+    return 'bills';
+  };
+
+  const [activeTab, setActiveTab] = useState<'bills' | 'members' | 'committees' | 'contracts' | 'map'>(getTabFromPath);
 
   // Real data state fetched from Cloudflare D1
   const [members, setMembers] = useState<any[]>([]);
   const [bills, setBills] = useState<any[]>([]);
+
+  useEffect(() => {
+    const onPop = () => {
+      setActiveTab(getTabFromPath());
+      setSelectedMemberId(null);
+      setSelectedBillId(null);
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
 
   useEffect(() => {
     fetch('/api/members')
@@ -173,31 +198,19 @@ export default function App() {
           setSelectedMemberId(null);
           setSelectedBillId(null);
           setActiveTab(tab);
+          const pathMap: Record<string, string> = {
+            bills: '/',
+            members: '/congress',
+            committees: '/committees',
+            contracts: '/procurement',
+            map: '/districts'
+          };
+          if (typeof window !== 'undefined') {
+            window.history.pushState({}, '', pathMap[tab] || '/');
+          }
         }}
         onToggleSearchMode={(mode) => setSearchMode(mode)}
       />
-
-      {/* Universal Page Action Bar (Smart AI Badge + LLM Agent Export Menu) */}
-      <div className="bg-[#0d1527] border-b border-neutral-800 py-2 px-6">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-            <span className="text-xs font-black text-neutral-200 uppercase tracking-wider font-mono">
-              {activeTab.toUpperCase()} • 118TH CONGRESS CIVIC PLATFORM
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={() => setIsChatOpen(true)} 
-              className="cursor-pointer transition-transform hover:scale-105 flex items-center"
-              title="Ask Smart AI Assistant"
-            >
-              <AiBadge size="md" label="Smart AI" active={true} />
-            </button>
-            <LlmActionMenu markdownUrl="/llms.txt" title="CongressWatch Page Content" />
-          </div>
-        </div>
-      </div>
 
       {/* Main Full-Width Content Container */}
       <main className="flex-1">
@@ -223,6 +236,47 @@ export default function App() {
             onSelectMember={(bioguide) => {
               setSelectedBillId(null);
               setSelectedMemberId(bioguide);
+            }}
+          />
+        ) : activeTab === 'members' ? (
+          <LawmakersDirectory
+            members={members}
+            onSelectMember={(bioguide) => setSelectedMemberId(bioguide)}
+            onAskAi={(prompt) => {
+              setIsChatOpen(true);
+              setChatMessages([{ role: 'user', text: prompt }]);
+              runAiChat(prompt);
+            }}
+          />
+        ) : activeTab === 'contracts' ? (
+          <ContractsExplorer
+            onSelectBill={(billId) => {
+              const matching = defaultBills.find(b => b.id.includes(billId) || billId.includes(b.id));
+              setSelectedBillId(matching ? matching.id : '118-hr-8070');
+            }}
+            onAskAi={(prompt) => {
+              setIsChatOpen(true);
+              setChatMessages([{ role: 'user', text: prompt }]);
+              runAiChat(prompt);
+            }}
+          />
+        ) : activeTab === 'committees' ? (
+          <CommitteesDirectory
+            onSelectMember={(bioguide) => setSelectedMemberId(bioguide)}
+            onAskAi={(prompt) => {
+              setIsChatOpen(true);
+              setChatMessages([{ role: 'user', text: prompt }]);
+              runAiChat(prompt);
+            }}
+          />
+        ) : activeTab === 'map' ? (
+          <DistrictMapExplorer
+            members={members}
+            onSelectMember={(bioguide) => setSelectedMemberId(bioguide)}
+            onAskAi={(prompt) => {
+              setIsChatOpen(true);
+              setChatMessages([{ role: 'user', text: prompt }]);
+              runAiChat(prompt);
             }}
           />
         ) : (

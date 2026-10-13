@@ -132,7 +132,8 @@ export default {
         const term = `%${search}%`;
         params.push(term, term, term);
       }
-      query += ' ORDER BY last_name ASC LIMIT 50';
+      const limitParam = url.searchParams.get('limit') ? parseInt(url.searchParams.get('limit')!, 10) : 600;
+      query += ` ORDER BY last_name ASC LIMIT ${limitParam}`;
 
       const results = await env.DB.prepare(query).bind(...params).all();
       return new Response(JSON.stringify(results.results), {
@@ -341,6 +342,46 @@ district_demographics: districtRecord || {
       });
     }
 
+    // 6b. Committees API (/api/committees)
+    if (url.pathname === '/api/committees' && request.method === 'GET') {
+      const chamber = url.searchParams.get('chamber');
+      let query = `
+        SELECT c.*, 
+          m1.first_name as chair_first, m1.last_name as chair_last, m1.party as chair_party, m1.state as chair_state,
+          m2.first_name as ranking_first, m2.last_name as ranking_last, m2.party as ranking_party, m2.state as ranking_state
+        FROM committees c
+        LEFT JOIN members m1 ON c.chair_bioguide_id = m1.bioguide_id
+        LEFT JOIN members m2 ON c.ranking_member_bioguide_id = m2.bioguide_id
+        WHERE 1=1
+      `;
+      const params: any[] = [];
+      if (chamber) {
+        query += ' AND c.chamber = ?';
+        params.push(chamber);
+      }
+      query += ' ORDER BY c.name ASC';
+      const results = await env.DB.prepare(query).bind(...params).all();
+      return new Response(JSON.stringify(results.results), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=3600' }
+      });
+    }
+
+    // 6c. Districts & Demographics API (/api/districts)
+    if (url.pathname === '/api/districts' && request.method === 'GET') {
+      const state = url.searchParams.get('state');
+      let query = 'SELECT * FROM district_demographics WHERE 1=1';
+      const params: any[] = [];
+      if (state) {
+        query += ' AND state = ?';
+        params.push(state.toUpperCase());
+      }
+      query += ' ORDER BY state ASC, district_number ASC LIMIT 100';
+      const results = await env.DB.prepare(query).bind(...params).all();
+      return new Response(JSON.stringify(results.results), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=3600' }
+      });
+    }
+
     // 7. Smart+ Conversational AI Search (Together AI Llama 3.3 70B + Vectorize)
     if (url.pathname === '/api/search/smart' && request.method === 'POST') {
       try {
@@ -436,8 +477,13 @@ Always cite your sources with inline numbers [1], [2] corresponding to official 
       return handleViewShare(request, env, shareId);
     }
 
-    // 9. Static Assets Fallback (Serves React 19 SPA)
-    return env.ASSETS.fetch(request);
+    // 9. Static Assets Fallback with SPA HTML rewrite for client routes
+    let assetResponse = await env.ASSETS.fetch(request);
+    if (assetResponse.status === 404 && !url.pathname.includes('.')) {
+      const indexUrl = new URL('/', request.url);
+      assetResponse = await env.ASSETS.fetch(new Request(indexUrl, request));
+    }
+    return assetResponse;
   },
 
   async queue(batch: any, env: Env): Promise<void> {
