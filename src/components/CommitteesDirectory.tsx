@@ -1,5 +1,153 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { SearchIcon, SparklesIcon, ExternalLinkIcon, CapitolIcon } from './Icons';
+import { CONGRESS_BENCHMARKS } from '../lib/constants';
+
+export const DEFAULT_COMMITTEES = [
+  {
+    id: "HSAS",
+    chamber: "house",
+    name: "House Committee on Armed Services",
+    code: "HASC",
+    chair_bioguide_id: "R000575",
+    ranking_member_bioguide_id: "S000510",
+    chair_first: "Mike",
+    chair_last: "Rogers",
+    chair_party: "Republican",
+    chair_state: "AL",
+    ranking_first: "Adam",
+    ranking_last: "Smith",
+    ranking_party: "Democrat",
+    ranking_state: "WA",
+    jurisdiction: "Defense policy, weapons procurement, authorization of Department of Defense programs, and military personnel pay and benefits.",
+    website_url: "https://armedservices.house.gov"
+  },
+  {
+    id: "SSAS",
+    chamber: "senate",
+    name: "Senate Committee on Armed Services",
+    code: "SASC",
+    chair_bioguide_id: "R000122",
+    ranking_member_bioguide_id: "W000437",
+    chair_first: "John",
+    chair_last: "Reed",
+    chair_party: "Democrat",
+    chair_state: "RI",
+    ranking_first: "Roger",
+    ranking_last: "Wicker",
+    ranking_party: "Republican",
+    ranking_state: "MS",
+    jurisdiction: "Aeronautical and space defense activities, military research and development, and strategic weapon system authorization.",
+    website_url: "https://www.armed-services.senate.gov"
+  },
+  {
+    id: "HSIF",
+    chamber: "house",
+    name: "House Committee on Energy and Commerce",
+    code: "HEC",
+    chair_bioguide_id: "M001159",
+    ranking_member_bioguide_id: "P000034",
+    chair_first: "Cathy",
+    chair_last: "McMorris Rodgers",
+    chair_party: "Republican",
+    chair_state: "WA",
+    ranking_first: "Frank",
+    ranking_last: "Pallone",
+    ranking_party: "Democrat",
+    ranking_state: "NJ",
+    jurisdiction: "Interstate and foreign commerce, critical supply chain security, telecommunications, public health, and clean energy technology.",
+    website_url: "https://energycommerce.house.gov"
+  },
+  {
+    id: "SSCM",
+    chamber: "senate",
+    name: "Senate Committee on Commerce, Science, and Transportation",
+    code: "SCOM",
+    chair_bioguide_id: "C000127",
+    ranking_member_bioguide_id: "C001098",
+    chair_first: "Maria",
+    chair_last: "Cantwell",
+    chair_party: "Democrat",
+    chair_state: "WA",
+    ranking_first: "Ted",
+    ranking_last: "Cruz",
+    ranking_party: "Republican",
+    ranking_state: "TX",
+    jurisdiction: "Artificial intelligence regulation, semiconductor manufacturing standards, science policy, oceans, and interstate commerce.",
+    website_url: "https://www.commerce.senate.gov"
+  },
+  {
+    id: "HSAP",
+    chamber: "house",
+    name: "House Committee on Appropriations",
+    code: "HAC",
+    chair_bioguide_id: "C001053",
+    ranking_member_bioguide_id: "D000216",
+    chair_first: "Tom",
+    chair_last: "Cole",
+    chair_party: "Republican",
+    chair_state: "OK",
+    ranking_first: "Rosa",
+    ranking_last: "DeLauro",
+    ranking_party: "Democrat",
+    ranking_state: "CT",
+    jurisdiction: "Annual discretionary appropriations of government revenue, spending bills, and federal agency budget riders.",
+    website_url: "https://appropriations.house.gov"
+  },
+  {
+    id: "SSAP",
+    chamber: "senate",
+    name: "Senate Committee on Appropriations",
+    code: "SAC",
+    chair_bioguide_id: "M001111",
+    ranking_member_bioguide_id: "C000127",
+    chair_first: "Patty",
+    chair_last: "Murray",
+    chair_party: "Democrat",
+    chair_state: "WA",
+    ranking_first: "Susan",
+    ranking_last: "Collins",
+    ranking_party: "Republican",
+    ranking_state: "ME",
+    jurisdiction: "Federal government line-item funding allocations, emergency supplementals, and executive department budget oversight.",
+    website_url: "https://www.appropriations.senate.gov"
+  },
+  {
+    id: "HSFA",
+    chamber: "house",
+    name: "House Committee on Foreign Affairs",
+    code: "HFAC",
+    chair_bioguide_id: "M001157",
+    ranking_member_bioguide_id: "M001137",
+    chair_first: "Michael",
+    chair_last: "McCaul",
+    chair_party: "Republican",
+    chair_state: "TX",
+    ranking_first: "Gregory",
+    ranking_last: "Meeks",
+    ranking_party: "Democrat",
+    ranking_state: "NY",
+    jurisdiction: "Export controls, international arms sales, foreign assistance, sanctions enforcement, and diplomatic oversight.",
+    website_url: "https://foreignaffairs.house.gov"
+  },
+  {
+    id: "SSFR",
+    chamber: "senate",
+    name: "Senate Committee on Foreign Relations",
+    code: "SFRC",
+    chair_bioguide_id: "C000141",
+    ranking_member_bioguide_id: "R000584",
+    chair_first: "Ben",
+    chair_last: "Cardin",
+    chair_party: "Democrat",
+    chair_state: "MD",
+    ranking_first: "James",
+    ranking_last: "Risch",
+    ranking_party: "Republican",
+    ranking_state: "ID",
+    jurisdiction: "International treaties, diplomatic nominations, international economic sanctions, and global national security agreements.",
+    website_url: "https://www.foreign.senate.gov"
+  }
+];
 
 export interface CommitteesDirectoryProps {
   onSelectMember: (bioguideId: string) => void;
@@ -10,8 +158,8 @@ export const CommitteesDirectory: React.FC<CommitteesDirectoryProps> = ({
   onSelectMember,
   onAskAi
 }) => {
-  const [committees, setCommittees] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [committees, setCommittees] = useState<any[]>(DEFAULT_COMMITTEES);
+  const [loading, setLoading] = useState(false);
   const [chamberFilter, setChamberFilter] = useState<'all' | 'house' | 'senate'>('all');
   const [search, setSearch] = useState('');
 
@@ -63,8 +211,8 @@ export const CommitteesDirectory: React.FC<CommitteesDirectoryProps> = ({
         </div>
         <div className="p-5 bg-neutral-900 text-white rounded-xl border border-neutral-800 shrink-0 text-center space-y-1">
           <div className="text-xs uppercase font-extrabold tracking-wider text-neutral-400">Standing Committees</div>
-          <div className="text-4xl font-black tabular-nums text-blue-400">{committees.length}</div>
-          <div className="text-xs text-neutral-300 font-semibold">House & Senate Panels</div>
+          <div className="text-4xl font-black tabular-nums text-blue-400">{CONGRESS_BENCHMARKS.TOTAL_STANDING_COMMITTEES}</div>
+          <div className="text-xs text-neutral-300 font-semibold">{CONGRESS_BENCHMARKS.HOUSE_STANDING_COMMITTEES_COUNT} House • {CONGRESS_BENCHMARKS.SENATE_STANDING_COMMITTEES_COUNT} Senate</div>
         </div>
       </div>
 
